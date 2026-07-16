@@ -1,0 +1,25 @@
+---
+import type { PartState } from "../lib/catalog";
+interface Props { state: PartState; label: string }
+const { state, label } = Astro.props;
+---
+<span class={`stamp ${state}`}>{label}</span>
+
+<style>
+  .stamp {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    letter-spacing: var(--tracking-label);
+    font-size: var(--text-xs);
+    border: var(--border-stamp) solid currentColor;
+    padding: 4px 8px;
+    transform: rotate(-4deg);
+    display: inline-block;
+    border-radius: var(--radius-stamp);
+    opacity: 0.92;
+    text-transform: uppercase;
+  }
+  .requested   { color: var(--status-requested); }
+  .development { color: var(--status-development); }
+  .measured, .fitted { color: var(--status-measured); }
+</style>

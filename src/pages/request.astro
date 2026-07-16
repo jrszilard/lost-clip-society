@@ -1,0 +1,44 @@
+---
+import Base from "../layouts/Base.astro";
+---
+<Base title="Request a Part — The Lost Clip Society">
+  <section>
+    <div class="wrap narrow">
+      <div class="eyebrow">Request a part</div>
+      <h1>Tell us what your dealer laughed at.</h1>
+      <p>
+        Give us the car and the part — a part number if you have one, a description and a photo
+        if you don’t. We’ll trace its OEM paper trail and add it to the catalog. Then, depending
+        on what exists in the world, we’ll tell you exactly what it takes to make yours.
+      </p>
+      <div class="tiers">
+        <div class="tier"><b>You have the old part (even broken)?</b> Best case — we measure it
+          and reproduce it. Mail-in or guided self-measurement.</div>
+        <div class="tier"><b>Part’s still on the car but stuck there?</b> We’ll guide you through
+          in-place photos, a few caliper readings, and — for sockets and holes — a $5 putty
+          impression that captures what matters.</div>
+        <div class="tier"><b>Part’s gone entirely?</b> The interfaces it clipped into are still
+          on your car, and those are what determine fit. Shape comes from records; fit comes
+          from your car. We’ll source a donor if one exists.</div>
+      </div>
+      <p class="note">
+        The request form is coming online with the shop. Until then:
+        <a href="mailto:requests@lostclipsociety.com">requests@lostclipsociety.com</a> — include
+        year, model, and your best description. Photos welcome. Laughter optional.
+      </p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .narrow { max-width: 720px; }
+  h1 { font-size: 2rem; margin: 8px 0 var(--space-4); }
+  p { color: var(--fg-dim); }
+  .tiers { display: grid; gap: var(--space-3); margin: var(--space-4) 0; }
+  .tier {
+    background: var(--bg-2); border: var(--border-hairline) solid var(--edge);
+    padding: var(--space-4); font-size: 0.9rem; color: var(--fg-dim);
+  }
+  .tier b { color: var(--fg); display: block; margin-bottom: 4px; font-family: var(--font-display); }
+  .note a { color: var(--accent); }
+</style>

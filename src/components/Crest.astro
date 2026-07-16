@@ -1,0 +1,25 @@
+---
+// The enamel grille-badge crest. Colors intentionally hard-pin brand ingredients
+// (a badge doesn't change with theme). Size via the `size` prop.
+const { size = 270 } = Astro.props;
+---
+<svg width={size} height={size} viewBox="0 0 300 300" role="img"
+     aria-label="Enamel grille badge of The Lost Clip Society">
+  <defs>
+    <path id="arcTop" d="M 44 150 A 106 106 0 0 1 256 150"></path>
+    <path id="arcBot" d="M 62 150 A 88 88 0 0 0 238 150"></path>
+  </defs>
+  <circle cx="150" cy="150" r="140" fill="#8c2f28" stroke="#c0992f" stroke-width="8"></circle>
+  <circle cx="150" cy="150" r="122" fill="none" stroke="#c0992f" stroke-width="2"></circle>
+  <circle cx="150" cy="150" r="86" fill="#1b1e22" stroke="#c0992f" stroke-width="3"></circle>
+  <text font-family="Georgia,serif" font-size="21" letter-spacing="4" fill="#f2ecdf" font-weight="bold">
+    <textPath href="#arcTop" startOffset="50%" text-anchor="middle">THE LOST CLIP SOCIETY</textPath>
+  </text>
+  <text font-family="Georgia,serif" font-size="13" letter-spacing="3" fill="#e6c568">
+    <textPath href="#arcBot" startOffset="50%" text-anchor="middle">MEASURE TWICE · PRINT ONCE</textPath>
+  </text>
+  <path d="M118 196 V138 a32 32 0 0 1 64 0 v38 a19 19 0 0 1 -38 0 V144"
+        fill="none" stroke="#e8e2d4" stroke-width="13" stroke-linecap="round"></path>
+  <text x="150" y="232" text-anchor="middle" font-family="Georgia,serif" font-size="14"
+        fill="#e6c568" letter-spacing="2">EST. 2026</text>
+</svg>

@@ -1,0 +1,174 @@
+---
+import Base from "../layouts/Base.astro";
+import Crest from "../components/Crest.astro";
+import PartCard from "../components/PartCard.astro";
+import { allParts } from "../lib/catalog";
+
+const parts = allParts();
+const featured = parts.slice(0, 3);
+const measured = parts.filter((p) => p.state === "measured" || p.state === "fitted").length;
+---
+<Base title="The Lost Clip Society — We remake the car parts nobody sells anymore">
+  <div class="wrap hero">
+    <div>
+      <div class="eyebrow">Reproduction parts for classic cars · Starting with the 1982–86 Toyota Celica Supra</div>
+      <h1>We remake the car parts nobody sells anymore.</h1>
+      <p class="sub">
+        Clips, knobs, and interior trim marked <em>No Longer Available</em> decades ago — we
+        measure surviving originals to a hundredth of a millimeter, 3D print faithful
+        reproductions, and fit them on real cars before any badge says so.
+        <em>Your dealer laughed. We measured.</em>
+      </p>
+      <div class="cta-row">
+        <a class="btn primary" href="/registry/">Browse the parts</a>
+        <a class="btn ghost" href="/request/">Request a part we don’t have</a>
+      </div>
+    </div>
+    <div class="badge-holder"><Crest /></div>
+  </div>
+
+  <div class="ledger">
+    <div class="wrap cells">
+      <div class="cell"><div class="num">{parts.length}</div><div class="lbl">Parts in the catalog</div></div>
+      <div class="cell"><div class="num">{measured}</div><div class="lbl">Measured &amp; ready to produce</div></div>
+      <div class="cell"><div class="num">0.01<span class="unit">&nbsp;mm</span></div><div class="lbl">Measurement precision</div></div>
+      <div class="cell"><div class="num">0</div><div class="lbl">Dealers consulted</div></div>
+    </div>
+  </div>
+
+  <section>
+    <div class="wrap">
+      <div class="sec-head">
+        <h2>Parts we’re bringing back</h2>
+        <div class="rule"></div>
+        <a href="/registry/">See all {parts.length} parts →</a>
+      </div>
+      <div class="cases">{featured.map((p) => <PartCard part={p} />)}</div>
+    </div>
+  </section>
+
+  <section id="how">
+    <div class="wrap">
+      <div class="sec-head"><h2>How it works</h2><div class="rule"></div></div>
+      <div class="steps">
+        <div class="step"><div class="no">STEP 1</div><h3>You request a part</h3>
+          <p>Tell us your car and the part you can’t buy anymore. It enters the catalog with its full OEM paper trail.</p></div>
+        <div class="step"><div class="no">STEP 2</div><h3>We research it</h3>
+          <p>We trace every part number it ever wore and draft the shape. Drafts are always labeled drafts.</p></div>
+        <div class="step"><div class="no">STEP 3</div><h3>We measure an original</h3>
+          <p>A surviving part meets the calipers — yours, a donor’s, or one we source. Every critical dimension, published.</p></div>
+        <div class="step"><div class="no">STEP 4</div><h3>Made to order</h3>
+          <p>You order; we print, inspect, and ship yours — fits or we remake it free. Group runs lower the price when demand pools.</p></div>
+        <div class="step"><div class="no">STEP 5</div><h3>Fitted on a real car</h3>
+          <p>The part goes on an actual car and gets confirmed — car, year, and material on the record. Only then does it wear the badge.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="workshop" class="tight">
+    <div class="wrap">
+      <div class="workshop">
+        <div class="roster">
+          SOCIETY STAFF&nbsp;&nbsp;<b>1</b><br />
+          CALIPERS&nbsp;&nbsp;<b>2</b><br />
+          STANDARDS&nbsp;&nbsp;<b>UNCOMPROMISING</b>
+        </div>
+        <div>
+          <h3>Who makes these</h3>
+          <p>
+            Every part is sourced, measured, modeled, and produced in-house, personally. This is
+            not a metaphor. It is a Tuesday. Members never owe us work — nothing you do is
+            required for a part to get made, and every fit report you send makes the catalog more
+            trustworthy for the next owner.
+          </p>
+          <span class="formula">We measure. You testify.</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="society" class="tight">
+    <div class="wrap society">
+      <div class="join">
+        <div class="eyebrow">Membership · free</div>
+        <h2>Join the Society.</h2>
+        <p>
+          Free, forever, and numbered. Members vote on which part we tackle next, get notified
+          when their part reaches production, and share fit reports that make every listing more
+          trustworthy. The parts cost money. Membership never does.
+        </p>
+        <div class="join-row">
+          <input type="email" placeholder="you@garage.example" aria-label="Email address" />
+          <a class="btn primary" href="#society">Claim a member number</a>
+        </div>
+        <small>Members get <b>The Missing Knob</b> — our bulletin. It ships only when a part moves forward.</small>
+      </div>
+      <div class="m-card" role="img" aria-label="Sample membership card">
+        <div class="mc-top">
+          <span class="mc-title">THE LOST CLIP SOCIETY</span>
+          <span class="mc-no">MEMBER № 0001</span>
+        </div>
+        <dl>
+          <dt>Chapter</dt><dd>A60 · Celica Supra</dd>
+          <dt>Standing</dt><dd>Fitment Officer</dd>
+          <dt>Testimony</dt><dd>1 part measured (18 dims)</dd>
+          <dt>Since</dt><dd>2026</dd>
+        </dl>
+        <div class="oath">“I solemnly swear to measure twice.”</div>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .hero { display: grid; grid-template-columns: 1.25fr 0.75fr; gap: var(--space-6); align-items: center; padding: var(--space-7) 24px 56px; }
+  .hero h1 { font-size: var(--text-hero); line-height: 1.08; }
+  .sub { max-width: 56ch; color: var(--fg-dim); margin: 18px 0 26px; }
+  .sub em { color: var(--fg); font-style: normal; border-bottom: 2px solid var(--action); }
+  .cta-row { display: flex; gap: var(--space-3); flex-wrap: wrap; }
+  .badge-holder { display: flex; justify-content: center; }
+  @media (max-width: 820px) { .hero { grid-template-columns: 1fr; } .badge-holder { order: -1; } }
+
+  .ledger { border-block: var(--border-hairline) solid var(--edge); background: var(--bg-2); }
+  .cells { display: flex; flex-wrap: wrap; }
+  .cell { flex: 1 1 200px; padding: var(--space-3) var(--space-4); border-left: var(--border-hairline) solid var(--edge); }
+  .cell:first-child { border-left: none; }
+  .num { font-family: var(--font-mono); font-size: 1.5rem; color: var(--accent); font-variant-numeric: tabular-nums; }
+  .unit { font-size: var(--text-sm); }
+  .lbl { font-family: var(--font-mono); font-size: var(--text-xs); letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--fg-dim); }
+
+  .cases { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: var(--space-4); }
+
+  .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1px; background: var(--edge); border: var(--border-hairline) solid var(--edge); }
+  .step { background: var(--bg-2); padding: var(--space-4) 18px; }
+  .step .no { font-family: var(--font-mono); color: var(--action); font-size: var(--text-xs); letter-spacing: var(--tracking-label); }
+  .step h3 { font-size: 1.02rem; margin: 8px 0 6px; }
+  .step p { font-size: 0.82rem; color: var(--fg-dim); margin: 0; }
+
+  .tight { padding-top: 0; }
+  .workshop { background: var(--bg-2); border: var(--border-hairline) solid var(--edge); display: grid; grid-template-columns: auto 1fr; gap: var(--space-5); align-items: center; padding: var(--space-5); }
+  @media (max-width: 820px) { .workshop { grid-template-columns: 1fr; } }
+  .roster { font-family: var(--font-mono); font-size: 0.78rem; line-height: 2; white-space: nowrap; border-right: var(--border-hairline) solid var(--edge); padding-right: var(--space-5); }
+  @media (max-width: 820px) { .roster { border-right: none; border-bottom: var(--border-hairline) solid var(--edge); padding: 0 0 var(--space-3); } }
+  .roster b { color: var(--accent); }
+  .workshop h3 { font-size: var(--text-lg); margin-bottom: 6px; }
+  .workshop p { font-size: 0.88rem; color: var(--fg-dim); max-width: 64ch; margin: 0; }
+  .formula { font-family: var(--font-display); font-style: italic; margin-top: var(--space-2); display: block; }
+
+  .society { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-6); align-items: center; }
+  @media (max-width: 820px) { .society { grid-template-columns: 1fr; } }
+  .join h2 { font-size: 1.7rem; margin-bottom: 10px; }
+  .join p { color: var(--fg-dim); max-width: 52ch; }
+  .join-row { display: flex; gap: 10px; margin-top: 18px; flex-wrap: wrap; }
+  .join-row input { font-family: var(--font-mono); font-size: 0.85rem; padding: 12px 14px; min-width: 240px; background: var(--bg-2); border: var(--border-hairline) solid var(--edge); color: var(--fg); }
+  .join small { display: block; margin-top: 10px; font-family: var(--font-mono); font-size: var(--text-xs); color: var(--fg-dim); }
+
+  .m-card { background: linear-gradient(135deg, #efe7d3, #e4d9bd); color: #26221a; border: 1px solid #cfc2a0; padding: 22px 24px; max-width: 420px; box-shadow: var(--shadow-card); transform: rotate(-1.2deg); }
+  .mc-top { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--brand-oxblood); padding-bottom: 10px; margin-bottom: 14px; }
+  .mc-title { font-family: var(--font-display); font-size: 0.95rem; }
+  .mc-no { font-family: var(--font-mono); font-size: 0.8rem; color: var(--brand-oxblood); font-weight: 700; }
+  .m-card dl { display: grid; grid-template-columns: auto 1fr; gap: 4px 16px; margin: 0; font-size: 0.8rem; }
+  .m-card dt { font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: var(--tracking-label); text-transform: uppercase; color: #8a8067; align-self: center; }
+  .m-card dd { margin: 0; font-family: var(--font-mono); }
+  .oath { margin-top: 14px; font-family: var(--font-display); font-style: italic; font-size: 0.86rem; color: #514a38; }
+</style>

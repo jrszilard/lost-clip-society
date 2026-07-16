@@ -1,0 +1,27 @@
+---
+import Base from "../../layouts/Base.astro";
+import PartCard from "../../components/PartCard.astro";
+import { allParts } from "../../lib/catalog";
+const parts = allParts();
+---
+<Base title="Parts Catalog — The Lost Clip Society">
+  <section>
+    <div class="wrap">
+      <div class="sec-head">
+        <h2>The catalog</h2>
+        <div class="rule"></div>
+        <a href="/request/">Missing something? Request it →</a>
+      </div>
+      <p class="lede">
+        Every part we know about, whatever its state — from freshly requested to fitted on a
+        real car. Pages live here forever; the state changes as the work happens.
+      </p>
+      <div class="cases">{parts.map((p) => <PartCard part={p} />)}</div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .lede { color: var(--fg-dim); max-width: 62ch; margin: 0 0 var(--space-5); }
+  .cases { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: var(--space-4); }
+</style>

@@ -1,0 +1,44 @@
+---
+import type { Dim } from "../lib/catalog";
+interface Props { dims: Dim[]; confirmed: number; total: number }
+const { dims, confirmed, total } = Astro.props;
+---
+<div class="table-holder">
+  <table class="dims">
+    <caption>Critical dimensions — confirmed {confirmed} of {total} (published free; the CAD stays in the workshop)</caption>
+    <thead><tr><th>Dimension</th><th>mm</th><th>Confidence</th></tr></thead>
+    <tbody>
+      {dims.map((d) => (
+        <tr>
+          <td>{d.name}</td>
+          <td>{d.mm ?? "—"}</td>
+          <td class={d.confidence === "confirmed" ? "conf" : "est"}>{d.confidence.toUpperCase()}</td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</div>
+
+<style>
+  .table-holder {
+    padding: var(--space-4);
+    overflow-x: auto;
+    background: repeating-linear-gradient(0deg, transparent, transparent 23px, rgba(140, 47, 40, 0.06) 24px);
+  }
+  table { border-collapse: collapse; width: 100%; font-family: var(--font-mono); font-size: 0.76rem; }
+  caption {
+    text-align: left; font-size: var(--text-xs); letter-spacing: var(--tracking-label);
+    text-transform: uppercase; color: var(--panel-dim); padding-bottom: var(--space-2);
+  }
+  th {
+    text-align: left; font-weight: 400; color: var(--panel-dim); font-size: 0.66rem;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    border-bottom: var(--border-hairline) solid var(--panel-line); padding: 4px 12px 6px 0;
+  }
+  td {
+    padding: 5px 12px 5px 0; border-bottom: 1px dotted var(--panel-line);
+    font-variant-numeric: tabular-nums; white-space: nowrap;
+  }
+  .conf { color: var(--status-measured); font-weight: 700; }
+  .est { color: var(--panel-dim); }
+</style>

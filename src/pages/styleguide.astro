@@ -1,0 +1,101 @@
+---
+// /styleguide — the living reference for the design system.
+// Wilma: everything on this page is rendered FROM the tokens in src/styles/tokens.css.
+// Edit that file, reload this page, and you see exactly what changed, everywhere.
+import Base from "../layouts/Base.astro";
+import Stamp from "../components/Stamp.astro";
+import Crest from "../components/Crest.astro";
+
+const brand = [
+  ["--brand-oxblood", "Oxblood — primary action"],
+  ["--brand-oxblood-deep", "Oxblood deep — hover"],
+  ["--brand-brass", "Brass — accent"],
+  ["--brand-brass-soft", "Brass soft"],
+  ["--brand-charcoal", "Charcoal — garage"],
+  ["--brand-charcoal-2", "Charcoal raised"],
+  ["--brand-cream", "Cream — spec sheet"],
+  ["--brand-cream-2", "Cream deep"],
+  ["--brand-cream-line", "Cream line"],
+];
+const status = [
+  ["--status-requested", "Requested"],
+  ["--status-development", "In development"],
+  ["--status-measured", "Measured / Fitted"],
+];
+---
+<Base title="Design System — The Lost Clip Society">
+  <section>
+    <div class="wrap">
+      <div class="eyebrow">Internal · living reference</div>
+      <h1>Design system</h1>
+      <p class="lede">
+        Every value on this page comes from <code>src/styles/tokens.css</code> — the single
+        source of truth for color, type, and spacing. Edit tokens there; this page (and the whole
+        site) follows. Brand rationale lives in <code>docs/brand-lost-clip-society.md</code>.
+      </p>
+
+      <h2>Brand palette</h2>
+      <div class="swatches">
+        {brand.map(([token, label]) => (
+          <div class="swatch">
+            <div class="chip" style={`background: var(${token})`}></div>
+            <code>{token}</code><span>{label}</span>
+          </div>
+        ))}
+      </div>
+
+      <h2>Status colors (semantic — keep distinct)</h2>
+      <div class="swatches">
+        {status.map(([token, label]) => (
+          <div class="swatch">
+            <div class="chip" style={`background: var(${token})`}></div>
+            <code>{token}</code><span>{label}</span>
+          </div>
+        ))}
+      </div>
+
+      <h2>Type</h2>
+      <div class="typerow"><span class="t-display">Display / the Society’s voice — Aa Bb 0123</span><code>--font-display</code></div>
+      <div class="typerow"><span class="t-body">Body — quiet, for reading. Aa Bb 0123</span><code>--font-body</code></div>
+      <div class="typerow"><span class="t-mono">MONO — ANYTHING EVIDENTIARY: DIMS, OEM №, STAMPS · 37.01 mm</span><code>--font-mono</code></div>
+
+      <h2>Components</h2>
+      <div class="comp-row">
+        <Stamp state="requested" label="Requested" />
+        <Stamp state="development" label="In development" />
+        <Stamp state="measured" label="Measured" />
+        <Stamp state="fitted" label="Fitted on a real car" />
+      </div>
+      <div class="comp-row">
+        <a class="btn primary" href="#">Primary action</a>
+        <a class="btn ghost" href="#">Ghost action</a>
+        <span class="eyebrow">Eyebrow label</span>
+      </div>
+      <div class="comp-row"><Crest size={140} /></div>
+
+      <h2>Voice cheat-sheet (from the brand book)</h2>
+      <ul class="voice">
+        <li>Plain language explains; the Society fiction makes it memorable. Never the reverse.</li>
+        <li>Data copy gets zero jokes. Mono type = trust signal.</li>
+        <li>One dry joke per section, max. The villain is discontinuation, never the reader’s car.</li>
+      </ul>
+    </div>
+  </section>
+</Base>
+
+<style>
+  h1 { font-size: 2rem; margin: 8px 0 var(--space-3); }
+  h2 { font-size: var(--text-lg); margin: var(--space-6) 0 var(--space-3); }
+  .lede { color: var(--fg-dim); max-width: 62ch; }
+  code { font-family: var(--font-mono); font-size: 0.75rem; color: var(--accent); }
+  .swatches { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: var(--space-3); }
+  .swatch { display: grid; grid-template-columns: 44px 1fr; grid-template-rows: auto auto; gap: 2px 12px; align-items: center; }
+  .chip { grid-row: 1 / 3; width: 44px; height: 44px; border: var(--border-hairline) solid var(--edge); }
+  .swatch span { font-size: var(--text-xs); color: var(--fg-dim); }
+  .typerow { display: flex; justify-content: space-between; align-items: baseline; gap: var(--space-4); border-bottom: 1px dotted var(--edge); padding: 10px 0; flex-wrap: wrap; }
+  .t-display { font-family: var(--font-display); font-size: 1.4rem; }
+  .t-body { font-family: var(--font-body); }
+  .t-mono { font-family: var(--font-mono); font-size: 0.85rem; }
+  .comp-row { display: flex; gap: var(--space-3); align-items: center; flex-wrap: wrap; margin-bottom: var(--space-3); }
+  .voice { color: var(--fg-dim); display: grid; gap: var(--space-2); padding-left: 1.2em; }
+</style>

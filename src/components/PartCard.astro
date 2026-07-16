@@ -1,0 +1,68 @@
+---
+import type { Part } from "../lib/catalog";
+import Stamp from "./Stamp.astro";
+interface Props { part: Part }
+const { part } = Astro.props;
+
+const cta: Record<string, string> = {
+  fitted: "Order this part",
+  measured: "Order this part",
+  development: "Reserve one",
+  requested: "Vote or sponsor",
+};
+const badge =
+  part.state === "requested"
+    ? "identity on file"
+    : part.dimsTotal > 0
+      ? `dims ${part.dimsConfirmed}/${part.dimsTotal}`
+      : "draft";
+---
+<article class="case">
+  <div class="tab">
+    <span>{part.oemNumber ? `OEM № ${part.oemNumber}` : "OEM № pending"}</span>
+    <span>{part.category.toUpperCase()}</span>
+  </div>
+  <h3><a href={`/registry/${part.slug}/`}>{part.title}</a></h3>
+  <div class="meta">{part.yearRange} Celica Supra{part.colors.length > 1 ? ` · originally ${part.colors.length} colors` : ""}</div>
+  <p class="story">{part.description.split(". ").slice(0, 2).join(". ")}.</p>
+  <div class="foot">
+    <Stamp state={part.state} label={part.stateLabel} />
+    <span class="fitbadge">{badge}</span>
+    <a class="act" href={`/registry/${part.slug}/`}>{cta[part.state]}</a>
+  </div>
+</article>
+
+<style>
+  .case {
+    background: var(--panel); color: var(--panel-fg);
+    border: var(--border-hairline) solid var(--panel-line);
+    display: flex; flex-direction: column;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .case:hover { transform: translateY(-3px); box-shadow: var(--shadow-card); }
+  .tab {
+    font-family: var(--font-mono); font-size: var(--text-xs);
+    letter-spacing: 0.12em; color: var(--panel-dim);
+    padding: 10px 16px 0; display: flex; justify-content: space-between; gap: var(--space-2);
+  }
+  h3 { font-size: var(--text-lg); padding: 6px 16px 0; }
+  h3 a { text-decoration: none; }
+  h3 a:hover { color: var(--action); }
+  .meta { font-family: var(--font-mono); font-size: var(--text-xs); color: var(--panel-dim); padding: 4px 16px 0; }
+  .story { font-size: 0.88rem; padding: 10px 16px 0; margin: 0; }
+  .foot {
+    margin-top: auto; padding: var(--space-3) 16px 16px;
+    display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap;
+  }
+  .fitbadge {
+    font-family: var(--font-mono); font-size: var(--text-xs);
+    background: var(--brand-charcoal); color: var(--brand-cream); padding: 4px 8px;
+  }
+  .act {
+    font-family: var(--font-mono); font-size: var(--text-xs);
+    letter-spacing: 0.06em; text-transform: uppercase; text-decoration: none;
+    color: var(--action); border: var(--border-hairline) solid var(--action); padding: 8px 10px;
+    white-space: nowrap;
+  }
+  .act:hover { background: var(--action); color: var(--action-fg); }
+</style>

@@ -1,0 +1,262 @@
+[
+  {
+    "slug": "sun-visor-clip",
+    "catalogId": "toyota/celica-supra/a60/sun-visor-clip",
+    "oemNumber": "74348-12010-14",
+    "title": "Sun Visor Retaining Clip",
+    "description": "Small clip/holder that retains the sun visor against the headliner/A-pillar when swung down. Toyota's own OEM catalog designation for the documented part below is \"HOLDER, VISOR\" (group 74348) -- confirmed via both epc-data.com (primary, diagram group) and toyotapartsdeal.com (secondary, per-year part numbers/colors/pricing/supersession) for chassis MA61 (Celica Supra / Celica XX, A60 generation). See notes on oem.part_numbers for an adjacent, less-documented \"CLIP, VISOR ARM SET\" (group 74336) found in the same epc-data.com diagram group -- recorded honestly below but NOT used as this entry's primary part because no distinct, color-suffixed Toyota order number for it could be confirmed this session (see notes).",
+    "yearRange": "’81–’86",
+    "category": "interior/trim",
+    "state": "measured",
+    "stateLabel": "Measured",
+    "colors": [
+      "Blue",
+      "Ivory",
+      "Gray",
+      "Beige"
+    ],
+    "supersededTo": "74348-30010-01",
+    "dims": [
+      {
+        "name": "overall_length",
+        "mm": 37.01,
+        "confidence": "confirmed"
+      },
+      {
+        "name": "overall_width",
+        "mm": 20.62,
+        "confidence": "confirmed"
+      },
+      {
+        "name": "hook_depth",
+        "mm": 25.4,
+        "confidence": "confirmed"
+      },
+      {
+        "name": "depth_at_back",
+        "mm": 10.61,
+        "confidence": "confirmed"
+      },
+      {
+        "name": "depth_at_middle",
+        "mm": 15.04,
+        "confidence": "confirmed"
+      },
+      {
+        "name": "jaw_ledge_depth",
+        "mm": 8.33,
+        "confidence": "confirmed"
+      },
+      {
+        "name": "hook_inner_diameter",
+        "mm": 8.1,
+        "confidence": "confirmed"
+      },
+      {
+        "name": "hook_wall_thickness",
+        "mm": 5,
+        "confidence": "confirmed"
+      },
+      {
+        "name": "hook_throat_opening",
+        "mm": 7.52,
+        "confidence": "confirmed"
+      },
+      {
+        "name": "pin_protrusion",
+        "mm": 14.21,
+        "confidence": "confirmed"
+      },
+      {
+        "name": "pin_core_diameter",
+        "mm": 3.07,
+        "confidence": "confirmed"
+      },
+      {
+        "name": "pin_barb_max_diameter",
+        "mm": 5.34,
+        "confidence": "confirmed"
+      },
+      {
+        "name": "pin_smooth_side_diameter",
+        "mm": 4.98,
+        "confidence": "confirmed"
+      },
+      {
+        "name": "pin_barb_count",
+        "mm": 12,
+        "confidence": "confirmed"
+      },
+      {
+        "name": "pin_first_barb_offset",
+        "mm": 1,
+        "confidence": "confirmed"
+      },
+      {
+        "name": "screw_hole_diameter",
+        "mm": 6.05,
+        "confidence": "confirmed"
+      },
+      {
+        "name": "screw_hole_edge_offset",
+        "mm": 9.17,
+        "confidence": "confirmed"
+      },
+      {
+        "name": "counterbore_depth",
+        "mm": 7,
+        "confidence": "confirmed"
+      }
+    ],
+    "dimsConfirmed": 18,
+    "dimsTotal": 18,
+    "fitReports": []
+  },
+  {
+    "slug": "heater-control-knob",
+    "catalogId": "toyota/celica-supra/a60/heater-control-knob",
+    "oemNumber": "55905-12060",
+    "title": "Heater Control Knob",
+    "description": "Hand-turned knob on the heater/climate control lever on the dash. Toyota's own OEM catalog designation for the original documented part is \"KNOB, HEATER CONTROL LEVER\" (55905-12060, mfr note \"W(BOOST VENTILATOR)\"), confirmed via toyotapartsdeal.com's dedicated OEM part page -- its own fitment table explicitly lists chassis codes MA61L-BLMQFA/K and MA61L-BLPQFA/K (1982-1985 Celica GT/GTS/ST/Supra, A60 generation). That part is marked \"Replaced By: 55905-12070\" (\"Control Knob Sub-Assembly\"), whose own dedicated page's fitment table likewise explicitly lists the same MA61L codes under \"1982-1989 Toyota Celica: GT, GTS, ST, Supra, Turbo 4WD, Turbo All Trac\". epc-data.com (primary reference drawing source) returned HTTP 429 this session before its MA61 heater-control diagram group could be located.",
+    "yearRange": "’82–’85",
+    "category": "interior/hvac",
+    "state": "development",
+    "stateLabel": "In development",
+    "colors": [],
+    "supersededTo": "55905-12070",
+    "dims": [
+      {
+        "name": "overall_diameter",
+        "mm": 20,
+        "confidence": "estimated"
+      },
+      {
+        "name": "overall_height",
+        "mm": 15,
+        "confidence": "estimated"
+      },
+      {
+        "name": "top_dome_fillet_radius",
+        "mm": 6,
+        "confidence": "estimated"
+      },
+      {
+        "name": "shaft_bore_diameter",
+        "mm": 4,
+        "confidence": "estimated"
+      },
+      {
+        "name": "shaft_bore_depth",
+        "mm": 8,
+        "confidence": "estimated"
+      },
+      {
+        "name": "base_chamfer",
+        "mm": 0.6,
+        "confidence": "estimated"
+      }
+    ],
+    "dimsConfirmed": 0,
+    "dimsTotal": 6,
+    "fitReports": []
+  },
+  {
+    "slug": "cigarette-lighter-bezel",
+    "catalogId": "toyota/celica-supra/a60/cigarette-lighter-bezel",
+    "oemNumber": "55477-14050",
+    "title": "Cigarette Lighter Hole Bezel",
+    "description": "Decorative surround/bezel plate around the console's cigarette-lighter opening. Toyota's OEM catalog designation for the documented part is \"BEZEL, CIGARETTE LIGHTER HOLE\" (55477-14050). **Confidence: MEDIUM, unresolved this session** -- this number is listed on both the 1982 and 1985 Toyota Celica \"Console Box & Bracket\" parts-list pages (toyotapartsdeal.com), which together cover the full Celica line for those model years (both MA61 Celica Supra and RA6# Celica), but unlike a sibling row on the SAME pages (the console-compartment-latch's 58908-14010 MA61 / 58908-22010 RA6# split), this bezel's row carries no chassis-code split at all. A dedicated \"Toyota Celica Cigarette Lighter\" category page on toyotapartsdeal.com does not list this bezel part number at all (only lighter-element and knob assemblies), so no independent fitment-table confirmation was found this session. epc-data.com (primary reference drawing source) confirmed the \"CONSOLE BOX & BRACKET\" (58-06) diagram group exists for this MA61 complectation (same group as console-compartment-latch), but rate-limited (HTTP 429) before the group's own page could be fetched for a figure/scheme callout.",
+    "yearRange": "’81–’86",
+    "category": "interior/trim",
+    "state": "requested",
+    "stateLabel": "Requested",
+    "colors": [],
+    "supersededTo": null,
+    "dims": [],
+    "dimsConfirmed": 0,
+    "dimsTotal": 0,
+    "fitReports": []
+  },
+  {
+    "slug": "coat-hook",
+    "catalogId": "toyota/celica-supra/a60/coat-hook",
+    "oemNumber": "74631-14010-08",
+    "title": "Coat Hook",
+    "description": "Small hook for hanging garments, in the same \"Armrest & Visor\" family/diagram group (epc-data body group 74-01) as the existing `sun-visor-clip` entry. Toyota's OEM catalog designation is \"HOOK, COAT, A\" (74631-14010). **Confidence: MEDIUM, unresolved this session** -- this part is listed on the SAME 1982 and 1985 Toyota Celica \"Armrest & Visor\" parts-list pages (toyotapartsdeal.com) that explicitly confirm MA61 fitment for the neighboring sun-visor holder (74348-12010, see sun-visor-clip), but the coat-hook's own rows carry NO chassis-code fitment text on either page (unlike the visor-holder rows on those same pages). epc-data.com (primary reference drawing source) previously confirmed this diagram group's existence and URL while researching the sun-visor-clip entry, but this session's own attempt to re-fetch it for the coat hook's specific figure/scheme number returned HTTP 429.",
+    "yearRange": "’81–’86",
+    "category": "interior/trim",
+    "state": "requested",
+    "stateLabel": "Requested",
+    "colors": [
+      "Ivory",
+      "Blue",
+      "Gray",
+      "Beige"
+    ],
+    "supersededTo": "74631-14010-B0",
+    "dims": [],
+    "dimsConfirmed": 0,
+    "dimsTotal": 0,
+    "fitReports": []
+  },
+  {
+    "slug": "console-compartment-latch",
+    "catalogId": "toyota/celica-supra/a60/console-compartment-latch",
+    "oemNumber": "58908-14010",
+    "title": "Console Compartment Door Latch",
+    "description": "Small lock/latch mechanism that keeps the center-console compartment lid closed. Toyota's own OEM catalog designation for the documented part is \"LOCK SUB-ASSY, CONSOLE COMPARTMENT DOOR\" (58908-14010), confirmed via toyotapartsdeal.com's dedicated 'Center Console Latch' category page (its own fitment table explicitly lists chassis code MA61L among others) and the 1982 Toyota Celica \"Console Box & Bracket\" parts-list page (which tags this exact number MA61). epc-data.com (primary reference drawing source) confirmed the existence of a \"CONSOLE BOX & BRACKET\" diagram group (58-06) for this MA61 complectation, but rate-limited (HTTP 429) before the group's own page could be fetched for a figure/scheme callout.",
+    "yearRange": "’81–’86",
+    "category": "interior/trim",
+    "state": "requested",
+    "stateLabel": "Requested",
+    "colors": [],
+    "supersededTo": null,
+    "dims": [],
+    "dimsConfirmed": 0,
+    "dimsTotal": 0,
+    "fitReports": []
+  },
+  {
+    "slug": "dash-vent-register",
+    "catalogId": "toyota/celica-supra/a60/dash-vent-register",
+    "oemNumber": "55650-14080-01",
+    "title": "Instrument Panel Vent Register",
+    "description": "Register (vent) assembly set into the instrument panel that directs HVAC airflow into the cabin. Toyota's own OEM catalog designation for the documented part below is \"REGISTER ASSY, INSTRUMENT PANEL, NO.1\" (part family 55650-14080), confirmed via toyotapartsdeal.com (secondary; 1982 + 1985 Toyota Celica \"Instrument Panel & Glove Compartment\" parts-list pages) for chassis MA61 (Celica Supra, A60 generation). epc-data.com (primary reference drawing source) returned HTTP 429 both times it was tried this session, before its MA61 register/vent diagram group could be located -- see notes on oem.diagram_refs.",
+    "yearRange": "’81–’86",
+    "category": "interior/hvac",
+    "state": "requested",
+    "stateLabel": "Requested",
+    "colors": [
+      "Black",
+      "Terra Cotta",
+      "Blue",
+      "Deep Maroon"
+    ],
+    "supersededTo": "55650-14080-01",
+    "dims": [],
+    "dimsConfirmed": 0,
+    "dimsTotal": 0,
+    "fitReports": []
+  },
+  {
+    "slug": "window-regulator-handle",
+    "catalogId": "toyota/celica-supra/a60/window-regulator-handle",
+    "oemNumber": "69260-14020-01",
+    "title": "Front Door Window Regulator Crank Handle",
+    "description": "Hand-crank handle a driver/passenger turns to raise/lower the front door glass (the handle only -- not the regulator scissor mechanism itself). Toyota's own OEM catalog designation is \"HANDLE ASSY, FRONT DOOR WINDOW REGULATOR\" (part family 69260-14020). The 1982 Toyota Celica per-year parts-list page lists this family without an explicit MA61-vs-RA6# split (the discovery-stage \"medium confidence\" flag), but toyotapartsdeal.com's dedicated \"Toyota Celica Window Crank Handles\" category page RESOLVES that ambiguity: it explicitly tags two of the three color variants (-01 Black, -06 Dark Brown) with chassis codes \"RA64L, RA65L, MA61L\" -- i.e. this part family IS documented as fitting the A60-generation Celica Supra, distinctly from the visually-similar but differently-numbered variants used by other Toyota models (e.g. 69260-14020-12, confirmed Corolla-only, AE82L/AE86L/CE80L). epc-data.com (primary reference drawing source) confirmed a \"FRONT DOOR WINDOW REGULATOR & HINGE\" diagram group (67-04) exists for this MA61 complectation, but rate-limited (HTTP 429) before the group's own page could be fetched for a figure/scheme callout.",
+    "yearRange": "’82–’85",
+    "category": "interior/trim",
+    "state": "requested",
+    "stateLabel": "Requested",
+    "colors": [
+      "Black",
+      "Blue",
+      "Dark Brown"
+    ],
+    "supersededTo": "69260-22030-14",
+    "dims": [],
+    "dimsConfirmed": 0,
+    "dimsTotal": 0,
+    "fitReports": []
+  }
+]

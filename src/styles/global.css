@@ -1,0 +1,61 @@
+/* Base styles — consume tokens only (see tokens.css). Components add their own
+   scoped styles in .astro files, also tokens-only. */
+@import "./tokens.css";
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-body);
+  font-size: var(--text-md);
+  line-height: var(--leading-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+a { color: inherit; }
+a:focus-visible, button:focus-visible, input:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+h1, h2, h3 { font-family: var(--font-display); text-wrap: balance; margin: 0; }
+
+.wrap { max-width: var(--content-width); margin: 0 auto; padding: 0 24px; }
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.btn {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 12px 18px;
+  text-decoration: none;
+  border: var(--border-hairline) solid transparent;
+  display: inline-block;
+}
+.btn.primary { background: var(--action); color: var(--action-fg); border-color: var(--action-hover); }
+.btn.primary:hover { background: var(--action-hover); }
+.btn.ghost { border-color: var(--edge); color: var(--fg); }
+.btn.ghost:hover { border-color: var(--accent); color: var(--accent); }
+
+section { padding: var(--space-7) 0; }
+.sec-head { display: flex; align-items: baseline; gap: var(--space-3); margin-bottom: var(--space-5); flex-wrap: wrap; }
+.sec-head h2 { font-size: var(--text-xl); }
+.sec-head .rule { flex: 1; height: 1px; background: var(--edge); min-width: 60px; }
+.sec-head a {
+  font-family: var(--font-mono); font-size: var(--text-xs);
+  letter-spacing: 0.1em; text-transform: uppercase; color: var(--fg-dim);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}

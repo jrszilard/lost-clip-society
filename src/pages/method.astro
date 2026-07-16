@@ -1,0 +1,47 @@
+---
+import Base from "../layouts/Base.astro";
+---
+<Base title="How We Verify Fit — The Lost Clip Society">
+  <section>
+    <div class="wrap narrow">
+      <div class="eyebrow">The method</div>
+      <h1>Why our parts fit: we publish the measurements.</h1>
+
+      <p>Plenty of sites will sell you a 3D-printed part that was “reviewed for accuracy” —
+      meaning someone looked at the CAD file. Ours work differently, and the difference is the
+      whole point:</p>
+
+      <ol class="ladder">
+        <li><b>Measured from a surviving original.</b> Every reproduction starts with caliper
+          measurements of a real part — never eyeballed from photos, never “close enough.”
+          Every critical dimension is published free with its source and confidence. Measure
+          your own part against ours, or buy ours. (The CAD files stay in the workshop.)</li>
+        <li><b>Drafts are labeled drafts.</b> Until a real part has met the calipers, a design
+          is marked <i>In development</i> — visibly, everywhere.</li>
+        <li><b>Materials chosen for where the part lives.</b> PETG for proof prints and shaded
+          interiors; ASA where sun and heat reach. A fit in one material is never assumed to
+          transfer to another — each earns its own confirmation.</li>
+        <li><b>“Fitted on a real car” means exactly that.</b> The badge appears only after the
+          part has been fitted to an actual car and confirmed — car, year, and material on the
+          record. Not simulated. Not implied. Fitted.</li>
+        <li><b>Fits or we remake it free.</b> If your part doesn’t fit, we remake it at no cost
+          — and your measurements make the next one better. That’s not a marketing risk for us;
+          it’s how the catalog improves.</li>
+      </ol>
+
+      <p class="colors"><b>A note on color:</b> most reproduction trim comes in universal black —
+      even when your interior was Blue, Ivory, Gray, or Beige. Our records keep every original
+      color code a part shipped in, so yours can be printed to match. Your Ivory interior can
+      stay Ivory.</p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .narrow { max-width: 720px; }
+  h1 { font-size: 2rem; margin: 8px 0 var(--space-4); }
+  p { color: var(--fg-dim); }
+  .ladder { display: grid; gap: var(--space-3); padding-left: 1.2em; margin: var(--space-4) 0; }
+  .ladder li { color: var(--fg-dim); }
+  .ladder b, .colors b { color: var(--fg); }
+</style>

@@ -1,0 +1,102 @@
+/* ============================================================================
+   THE LOST CLIP SOCIETY — DESIGN SYSTEM (design tokens)
+   ============================================================================
+   👋 Wilma: this file IS the design system. Every color, typeface, and spacing
+   value used anywhere on the site is defined here and ONLY here — components
+   never hard-code values. Change a token, and the whole site follows.
+
+   Live preview of everything in this file:  /styleguide
+   Brand rationale (why these choices):      ../../docs/brand-lost-clip-society.md
+
+   Rules of the road:
+   1. Edit VALUES freely; keep token NAMES stable (components reference names).
+   2. The site ships a dark "garage" theme (default) and a light "reading room"
+      theme. Every color token has a value in BOTH blocks below — if you change
+      one, check its sibling.
+   3. `--status-*` colors are semantic (they mean something) — keep the three
+      statuses visually distinct and legible on the cream panel color.
+   ========================================================================== */
+
+:root {
+  /* ---- BRAND PALETTE (theme-independent ingredients) -------------------- */
+  --brand-oxblood:      #8c2f28;  /* enamel badge red — primary action color  */
+  --brand-oxblood-deep: #6e241f;  /* hover/pressed state of the above         */
+  --brand-brass:        #c0992f;  /* badge metal — accents, eyebrows, marks   */
+  --brand-brass-soft:   #d4b45a;  /* lighter brass, borders on brass          */
+  --brand-charcoal:     #1b1e22;  /* garage at night                          */
+  --brand-charcoal-2:   #23272d;  /* raised surfaces on charcoal              */
+  --brand-cream:        #f2ecdf;  /* aged spec-sheet paper                    */
+  --brand-cream-2:      #e9e1cf;  /* deeper paper                             */
+  --brand-cream-line:   #d8cdb4;  /* rules/borders on paper                   */
+
+  /* ---- STATUS COLORS (semantic — the part-state stamps) ------------------ */
+  --status-requested:   #b3402e;  /* stamp red    — REQUESTED                 */
+  --status-development: #b07d2a;  /* amber        — IN DEVELOPMENT            */
+  --status-measured:    #3d6b4f;  /* enamel green — MEASURED / FITTED         */
+
+  /* ---- TYPE -------------------------------------------------------------- */
+  /* Display/slab = the Society's voice. Mono = anything evidentiary (numbers,
+     dims, stamps) — the mono IS the trust signal. Sans = quiet body text.    */
+  --font-display: "Superclarendon", "Rockwell", "Bookman Old Style", Georgia, serif;
+  --font-body:    -apple-system, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+  --font-mono:    ui-monospace, "SF Mono", "Cascadia Code", Consolas, "Liberation Mono", monospace;
+
+  --text-xs: 0.68rem;   /* stamps, fine print, eyebrows   */
+  --text-sm: 0.8rem;    /* meta, captions, buttons        */
+  --text-md: 1rem;      /* body                           */
+  --text-lg: 1.25rem;   /* card titles, panel headings    */
+  --text-xl: 1.6rem;    /* section headings               */
+  --text-hero: clamp(2rem, 4.6vw, 3.3rem);
+
+  --tracking-label: 0.14em;  /* uppercase mono labels */
+  --leading-body: 1.55;
+
+  /* ---- SPACE & SHAPE ------------------------------------------------------ */
+  --space-1: 4px;  --space-2: 8px;  --space-3: 14px; --space-4: 20px;
+  --space-5: 28px; --space-6: 44px; --space-7: 64px;
+  --radius-stamp: 2px;      /* stamps get a whisper of rounding, nothing else */
+  --border-hairline: 1px;
+  --border-stamp: 2.5px;
+  --content-width: 1080px;
+  --shadow-card: 0 10px 24px rgba(0, 0, 0, 0.35);
+
+  /* ---- THEME: default = dark "garage" ------------------------------------ */
+  --bg:        var(--brand-charcoal);
+  --bg-2:      var(--brand-charcoal-2);
+  --fg:        #e8e2d4;
+  --fg-dim:    #a9a294;
+  --edge:      #3a4048;             /* borders on the dark ground              */
+  --panel:     var(--brand-cream);  /* the cream "spec sheet" surfaces         */
+  --panel-fg:  #26221a;
+  --panel-dim: #6b6250;
+  --panel-line:var(--brand-cream-line);
+  --accent:    var(--brand-brass);
+  --action:    var(--brand-oxblood);
+  --action-hover: var(--brand-oxblood-deep);
+  --action-fg: #f4ede0;
+}
+
+/* ---- THEME: light "reading room" (OS preference) -------------------------- */
+@media (prefers-color-scheme: light) {
+  :root {
+    --bg:     #efe8d8;
+    --bg-2:   #e7dfcb;
+    --fg:     #26221a;
+    --fg-dim: #6b6250;
+    --edge:   #cabfa4;
+    --panel:  #faf6ec;
+    --panel-line: #ddd2b9;
+  }
+}
+
+/* ---- Explicit theme override (site toggle, wins over OS preference) ------- */
+:root[data-theme="dark"] {
+  --bg: var(--brand-charcoal); --bg-2: var(--brand-charcoal-2);
+  --fg: #e8e2d4; --fg-dim: #a9a294; --edge: #3a4048;
+  --panel: var(--brand-cream); --panel-line: var(--brand-cream-line);
+}
+:root[data-theme="light"] {
+  --bg: #efe8d8; --bg-2: #e7dfcb;
+  --fg: #26221a; --fg-dim: #6b6250; --edge: #cabfa4;
+  --panel: #faf6ec; --panel-line: #ddd2b9;
+}

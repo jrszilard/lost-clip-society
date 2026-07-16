@@ -1,0 +1,93 @@
+---
+import "../styles/global.css";
+import Crest from "../components/Crest.astro";
+interface Props { title: string; description?: string }
+const { title, description = "Reproduction parts for classic cars — measured from originals, made to order, fitted on real cars." } = Astro.props;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  </head>
+  <body>
+    <header class="site">
+      <div class="wrap bar">
+        <a class="markrow" href="/">
+          <span class="mini-crest"><Crest size={34} /></span>
+          <span class="wordmark">THE <b>LOST CLIP</b> SOCIETY</span>
+        </a>
+        <nav class="main" aria-label="Primary">
+          <a href="/registry/">Parts Catalog</a>
+          <a href="/request/">Request a Part</a>
+          <a href="/method/">How We Verify Fit</a>
+        </nav>
+        <a class="member-cta" href="/#society">Join Free</a>
+      </div>
+    </header>
+
+    <main><slot /></main>
+
+    <footer class="site">
+      <div class="wrap cols">
+        <div>
+          <div class="wordmark" style="margin-bottom:8px">THE <b>LOST CLIP</b> SOCIETY</div>
+          <p class="fine">
+            Reproduction interior trim for cars the industry gave up on. Pre-2000, unbranded,
+            non-safety-critical parts only. Every design is our own, modeled in-house from
+            measured original parts — measurements published free, fit proven on real cars
+            before any badge says so. This page is never NLA.
+          </p>
+        </div>
+        <nav aria-label="Footer">
+          <a href="/registry/">Catalog</a>
+          <a href="/request/">Request a part</a>
+          <a href="/method/">How we verify fit</a>
+          <a href="/styleguide/">Design system</a>
+        </nav>
+      </div>
+      <div class="wrap">
+        <p class="fine small">
+          © 2026 The Lost Clip Society. The Society accepts no responsibility for tears shed
+          over crumbled OEM plastic. OEM part numbers appear for identification only; the
+          Society is not affiliated with, endorsed by, or laughed at by any manufacturer. Anymore.
+        </p>
+      </div>
+    </footer>
+  </body>
+</html>
+
+<style>
+  header.site { border-bottom: var(--border-hairline) solid var(--edge); }
+  .bar { display: flex; align-items: center; gap: 18px; padding: var(--space-3) 0; }
+  .markrow { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+  .mini-crest { display: flex; }
+  .wordmark { font-family: var(--font-display); font-size: 1.02rem; letter-spacing: 0.04em; }
+  .wordmark b { color: var(--accent); }
+  nav.main { margin-left: auto; display: flex; gap: var(--space-4); flex-wrap: wrap; }
+  nav.main a {
+    font-family: var(--font-mono); font-size: var(--text-xs); letter-spacing: 0.1em;
+    text-transform: uppercase; text-decoration: none; color: var(--fg-dim);
+    padding: 4px 0; border-bottom: 2px solid transparent;
+  }
+  nav.main a:hover { color: var(--fg); border-bottom-color: var(--action); }
+  .member-cta {
+    font-family: var(--font-mono); font-size: var(--text-xs); letter-spacing: 0.08em;
+    color: var(--brand-charcoal); background: var(--accent);
+    padding: 7px 12px; text-decoration: none;
+    border: var(--border-hairline) solid var(--brand-brass-soft);
+  }
+  footer.site { border-top: var(--border-hairline) solid var(--edge); padding: var(--space-6) 0; margin-top: var(--space-6); }
+  .cols { display: flex; justify-content: space-between; gap: var(--space-5); flex-wrap: wrap; align-items: flex-start; }
+  .fine { font-family: var(--font-mono); font-size: var(--text-xs); color: var(--fg-dim); max-width: 52ch; line-height: 1.8; }
+  .fine.small { margin-top: var(--space-4); }
+  footer nav { display: flex; gap: var(--space-3); flex-wrap: wrap; }
+  footer nav a {
+    font-family: var(--font-mono); font-size: var(--text-xs); letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--fg-dim); text-decoration: none;
+  }
+  footer nav a:hover { color: var(--accent); }
+</style>
