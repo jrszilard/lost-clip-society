@@ -66,28 +66,31 @@ const { title, description = "Reproduction parts for classic cars — measured f
   .markrow { display: flex; align-items: center; gap: 10px; text-decoration: none; }
   .mini-crest { display: flex; }
   .wordmark { font-family: var(--font-display); font-size: 1.02rem; letter-spacing: 0.04em; }
-  .wordmark b { color: var(--accent); }
+  .wordmark b { color: var(--action); }
   nav.main { margin-left: auto; display: flex; gap: var(--space-4); flex-wrap: wrap; }
   nav.main a {
     font-family: var(--font-mono); font-size: var(--text-xs); letter-spacing: 0.1em;
     text-transform: uppercase; text-decoration: none; color: var(--fg-dim);
     padding: 4px 0; border-bottom: 2px solid transparent;
   }
-  nav.main a:hover { color: var(--fg); border-bottom-color: var(--action); }
+  nav.main a:hover { color: var(--fg); border-bottom-color: var(--accent); }
   .member-cta {
     font-family: var(--font-mono); font-size: var(--text-xs); letter-spacing: 0.08em;
-    color: var(--brand-charcoal); background: var(--accent);
+    color: var(--action-fg); background: var(--accent);
     padding: 7px 12px; text-decoration: none;
-    border: var(--border-hairline) solid var(--brand-brass-soft);
+    border: var(--border-hairline) solid var(--paint-signal-deep);
   }
-  footer.site { border-top: var(--border-hairline) solid var(--edge); padding: var(--space-6) 0; margin-top: var(--space-6); }
+  .member-cta:hover { background: var(--paint-signal-deep); }
+  /* The footer rides Plum Crazy in both themes — the deep ground of the system. */
+  footer.site { background: var(--footer-bg); color: var(--footer-fg); padding: var(--space-6) 0; margin-top: var(--space-6); }
+  footer.site .wordmark b { color: var(--paint-sunflower); }
   .cols { display: flex; justify-content: space-between; gap: var(--space-5); flex-wrap: wrap; align-items: flex-start; }
-  .fine { font-family: var(--font-mono); font-size: var(--text-xs); color: var(--fg-dim); max-width: 52ch; line-height: 1.8; }
+  .fine { font-family: var(--font-mono); font-size: var(--text-xs); color: var(--footer-dim); max-width: 52ch; line-height: 1.8; }
   .fine.small { margin-top: var(--space-4); }
   footer nav { display: flex; gap: var(--space-3); flex-wrap: wrap; }
   footer nav a {
     font-family: var(--font-mono); font-size: var(--text-xs); letter-spacing: 0.1em;
-    text-transform: uppercase; color: var(--fg-dim); text-decoration: none;
+    text-transform: uppercase; color: var(--footer-dim); text-decoration: none;
   }
-  footer nav a:hover { color: var(--accent); }
+  footer nav a:hover { color: var(--paint-sunflower); }
 </style>

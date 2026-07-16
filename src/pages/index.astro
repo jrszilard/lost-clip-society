@@ -12,7 +12,7 @@ const measured = parts.filter((p) => p.state === "measured" || p.state === "fitt
   <div class="wrap hero">
     <div>
       <div class="eyebrow">Reproduction parts for classic cars · Starting with the 1982–86 Toyota Celica Supra</div>
-      <h1>We remake the car parts nobody sells anymore.</h1>
+      <h1>We remake the car parts <span class="mk">nobody sells anymore.</span></h1>
       <p class="sub">
         Clips, knobs, and interior trim marked <em>No Longer Available</em> decades ago — we
         measure surviving originals to a hundredth of a millimeter, 3D print faithful
@@ -123,6 +123,8 @@ const measured = parts.filter((p) => p.state === "measured" || p.state === "fitt
 <style>
   .hero { display: grid; grid-template-columns: 1.25fr 0.75fr; gap: var(--space-6); align-items: center; padding: var(--space-7) 24px 56px; }
   .hero h1 { font-size: var(--text-hero); line-height: 1.08; }
+  /* Sublime is a highlighter, never a surface — this is its one job. */
+  .hero h1 .mk { box-shadow: inset 0 -0.26em 0 color-mix(in srgb, var(--paint-sublime) 65%, transparent); }
   .sub { max-width: 56ch; color: var(--fg-dim); margin: 18px 0 26px; }
   .sub em { color: var(--fg); font-style: normal; border-bottom: 2px solid var(--action); }
   .cta-row { display: flex; gap: var(--space-3); flex-wrap: wrap; }
@@ -133,7 +135,7 @@ const measured = parts.filter((p) => p.state === "measured" || p.state === "fitt
   .cells { display: flex; flex-wrap: wrap; }
   .cell { flex: 1 1 200px; padding: var(--space-3) var(--space-4); border-left: var(--border-hairline) solid var(--edge); }
   .cell:first-child { border-left: none; }
-  .num { font-family: var(--font-mono); font-size: 1.5rem; color: var(--accent); font-variant-numeric: tabular-nums; }
+  .num { font-family: var(--font-mono); font-size: 1.5rem; color: var(--action); font-variant-numeric: tabular-nums; }
   .unit { font-size: var(--text-sm); }
   .lbl { font-family: var(--font-mono); font-size: var(--text-xs); letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--fg-dim); }
 

@@ -15,12 +15,21 @@ the fiction.
    40-year-old car.
 4. Fiction tone: dry, bureaucratic-noir, understated. ("Your dealer laughed. We measured.")
 
-## Visual world
+## Visual world — "The Paint Chart Era"
+- **The idea:** ~80% of new cars today are white/black/grey/silver; in 1970 Mopar alone
+  offered ~30 colors. The site looks like that era's option list: warm dealer-brochure
+  stock, and every accent a REAL named pre-1990 paint (Mexico Blue, Signal Orange,
+  Grabber Blue, Plum Crazy, Sublime, Sunflower, Bahia Red, Irish Green) — credited like
+  the catalog credits OEM numbers. One paint, one job; see `src/styles/tokens.css`.
+- **Color is chrome, never product:** part renders stay neutral resin everywhere; a part
+  earns its real trim colors only on its own page, from its own OEM data.
 - **Logo:** enamel grille badge (vintage car-club badges are the artifact this honors) —
-  see `src/components/Crest.astro`.
-- **Palette:** garage-at-night charcoal, aged spec-sheet cream, enamel oxblood, brass.
-  Status colors are semantic (requested / in development / measured-fitted) — keep the
-  three visually distinct. All values in `src/styles/tokens.css`.
+  see `src/components/Crest.astro`. It keeps its oxblood/brass: a badge doesn't repaint
+  with the wall behind it.
+- **Palette mechanics:** default theme is the light "showroom brochure"; dark is "night
+  race" (same paints, tarmac ground). Status colors are semantic (requested / in
+  development / measured-fitted) — hues re-keyed to period paints, meaning unchanged,
+  keep the three visually distinct.
 - **Type:** slab serif = the Society's voice; monospace = anything evidentiary (dims,
   OEM numbers, stamps); quiet sans for body.
 - **Texture cues:** rubber-stamped statuses, membership cards, graph-paper spec panels.

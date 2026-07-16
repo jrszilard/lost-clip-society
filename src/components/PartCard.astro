@@ -16,11 +16,20 @@ const badge =
     : part.dimsTotal > 0
       ? `dims ${part.dimsConfirmed}/${part.dimsTotal}`
       : "draft";
+
+// Category paint-coding: each category owns a paint from the chart (the part
+// render stays neutral — color codes the taxonomy, never the product).
+const categoryPaint: Record<string, string> = {
+  "interior/trim": "var(--paint-signal)",
+  "interior/hvac": "var(--paint-mexico)",
+};
+const catPaint = categoryPaint[part.category] ?? "var(--paint-plum)";
 ---
 <article class="case">
+  <div class="cat-band" style={`background:${catPaint}`}></div>
   <div class="tab">
     <span>{part.oemNumber ? `OEM № ${part.oemNumber}` : "OEM № pending"}</span>
-    <span>{part.category.toUpperCase()}</span>
+    <span class="cat-label" style={`color:${catPaint}`}>{part.category.toUpperCase()}</span>
   </div>
   <h3><a href={`/registry/${part.slug}/`}>{part.title}</a></h3>
   <div class="meta">{part.yearRange} Celica Supra{part.colors.length > 1 ? ` · originally ${part.colors.length} colors` : ""}</div>
@@ -40,6 +49,8 @@ const badge =
     transition: transform 0.15s ease, box-shadow 0.15s ease;
   }
   .case:hover { transform: translateY(-3px); box-shadow: var(--shadow-card); }
+  .cat-band { height: 5px; }
+  .cat-label { font-weight: 700; }
   .tab {
     font-family: var(--font-mono); font-size: var(--text-xs);
     letter-spacing: 0.12em; color: var(--panel-dim);
