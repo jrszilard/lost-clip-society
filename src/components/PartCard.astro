@@ -10,33 +10,28 @@ const cta: Record<string, string> = {
   development: "Reserve one",
   requested: "Vote or sponsor",
 };
-const badge =
-  part.state === "requested"
-    ? "identity on file"
-    : part.dimsTotal > 0
-      ? `dims ${part.dimsConfirmed}/${part.dimsTotal}`
-      : "draft";
-
-// Category paint-coding: each category owns a paint from the chart (the part
-// render stays neutral — color codes the taxonomy, never the product).
-const categoryPaint: Record<string, string> = {
-  "interior/trim": "var(--paint-signal)",
-  "interior/hvac": "var(--paint-mexico)",
+// Status paint-coding: the band echoes the state stamp below it — one glance
+// at the top of the card signals where the part sits on the ladder.
+const statusPaint: Record<string, string> = {
+  requested: "var(--status-requested)",
+  development: "var(--status-development)",
+  measured: "var(--status-measured)",
+  fitted: "var(--status-measured)",
 };
-const catPaint = categoryPaint[part.category] ?? "var(--paint-plum)";
+const statePaint = statusPaint[part.state];
 ---
 <article class="case">
-  <div class="cat-band" style={`background:${catPaint}`}></div>
+  <div class="cat-band" style={`background:${statePaint}`}></div>
+  <div class="thumb" role="img" aria-label={`${part.title} image placeholder`}>
+    <span>Image</span>
+  </div>
   <div class="tab">
     <span>{part.oemNumber ? `OEM № ${part.oemNumber}` : "OEM № pending"}</span>
-    <span class="cat-label" style={`color:${catPaint}`}>{part.category.toUpperCase()}</span>
   </div>
   <h3><a href={`/registry/${part.slug}/`}>{part.title}</a></h3>
-  <div class="meta">{part.yearRange} Celica Supra{part.colors.length > 1 ? ` · originally ${part.colors.length} colors` : ""}</div>
-  <p class="story">{part.description.split(". ").slice(0, 2).join(". ")}.</p>
+  <div class="meta">{part.yearRange} Toyota Celica Supra{part.colors.length > 1 ? ` · originally ${part.colors.length} colors` : ""}</div>
   <div class="foot">
     <Stamp state={part.state} label={part.stateLabel} />
-    <span class="fitbadge">{badge}</span>
     <a class="act" href={`/registry/${part.slug}/`}>{cta[part.state]}</a>
   </div>
 </article>
@@ -50,7 +45,13 @@ const catPaint = categoryPaint[part.category] ?? "var(--paint-plum)";
   }
   .case:hover { transform: translateY(-3px); box-shadow: var(--shadow-card); }
   .cat-band { height: 5px; }
-  .cat-label { font-weight: 700; }
+  .thumb {
+    aspect-ratio: 4 / 3;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--bg-2); border-bottom: var(--border-hairline) solid var(--panel-line);
+    color: var(--panel-dim); font-family: var(--font-mono); font-size: var(--text-xs);
+    letter-spacing: var(--tracking-label); text-transform: uppercase;
+  }
   .tab {
     font-family: var(--font-mono); font-size: var(--text-xs);
     letter-spacing: 0.12em; color: var(--panel-dim);
@@ -59,15 +60,10 @@ const catPaint = categoryPaint[part.category] ?? "var(--paint-plum)";
   h3 { font-size: var(--text-lg); padding: 6px 16px 0; }
   h3 a { text-decoration: none; }
   h3 a:hover { color: var(--action); }
-  .meta { font-family: var(--font-mono); font-size: var(--text-xs); color: var(--panel-dim); padding: 4px 16px 0; }
-  .story { font-size: 0.88rem; padding: 10px 16px 0; margin: 0; }
+  .meta { font-family: var(--font-mono); font-size: var(--text-xs); color: var(--panel-dim); padding: 4px 16px 12px; }
   .foot {
     margin-top: auto; padding: var(--space-3) 16px 16px;
     display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap;
-  }
-  .fitbadge {
-    font-family: var(--font-mono); font-size: var(--text-xs);
-    background: var(--brand-charcoal); color: var(--brand-cream); padding: 4px 8px;
   }
   .act {
     font-family: var(--font-mono); font-size: var(--text-xs);
