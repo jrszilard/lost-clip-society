@@ -2,7 +2,7 @@
 import Base from "../layouts/Base.astro";
 import PartCard from "../components/PartCard.astro";
 import { allParts } from "../lib/catalog";
-import { ClipboardList, Search, Ruler, Printer, CarFront } from "lucide-astro";
+import { ClipboardList, Search, Ruler, Printer, CarFront } from "@lucide/astro";
 
 const parts = allParts();
 const featured = parts.slice(0, 3);
@@ -37,15 +37,15 @@ const featured = parts.slice(0, 3);
     <div class="wrap">
       <div class="sec-head"><h2>How it works</h2><div class="rule"></div></div>
       <div class="steps">
-        <div class="step"><ClipboardList class="step-icon" size={28} strokeWidth={1.6} /><h3>You request a part</h3>
+        <div class="step"><ClipboardList class="step-icon" size={28} stroke-width={1.6} /><h3>You request a part</h3>
           <p>Tell us your car and the part you can’t buy anymore. It enters the catalog with its full OEM paper trail.</p></div>
-        <div class="step"><Search class="step-icon" size={28} strokeWidth={1.6} /><h3>We research it</h3>
+        <div class="step"><Search class="step-icon" size={28} stroke-width={1.6} /><h3>We research it</h3>
           <p>We trace every part number it ever wore and draft the shape. Drafts are always labeled drafts.</p></div>
-        <div class="step"><Ruler class="step-icon" size={28} strokeWidth={1.6} /><h3>We measure an original</h3>
+        <div class="step"><Ruler class="step-icon" size={28} stroke-width={1.6} /><h3>We measure an original</h3>
           <p>A surviving part meets the calipers: yours, a donor’s, or one we source. Every critical dimension, published.</p></div>
-        <div class="step"><Printer class="step-icon" size={28} strokeWidth={1.6} /><h3>Made to order</h3>
+        <div class="step"><Printer class="step-icon" size={28} stroke-width={1.6} /><h3>Made to order</h3>
           <p>You order; we print, inspect, and ship yours. It fits, or we remake it free. Group runs lower the price when demand pools.</p></div>
-        <div class="step"><CarFront class="step-icon" size={28} strokeWidth={1.6} /><h3>Fitted on a real car</h3>
+        <div class="step"><CarFront class="step-icon" size={28} stroke-width={1.6} /><h3>Fitted on a real car</h3>
           <p>The part goes on an actual car and gets confirmed: car, year, and material on the record. Only then does it wear the badge.</p></div>
       </div>
     </div>
