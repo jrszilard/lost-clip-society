@@ -1,4 +1,6 @@
 ---
+import fs from "node:fs";
+import path from "node:path";
 import Base from "../../layouts/Base.astro";
 import Stamp from "../../components/Stamp.astro";
 import SpecTable from "../../components/SpecTable.astro";
@@ -9,6 +11,10 @@ export function getStaticPaths() {
 }
 const { part } = Astro.props;
 const orderable = part.state === "measured" || part.state === "fitted";
+
+// Neutral-resin render, once the part is modeled (scripts/render-part.py).
+const imgSrc = `/images/parts/${part.slug}.jpg`;
+const hasImage = fs.existsSync(path.join(process.cwd(), "public", "images", "parts", `${part.slug}.jpg`));
 ---
 <Base title={`${part.title} — ${part.oemNumber ?? "OEM"} reproduction — The Lost Clip Society`}
       description={part.description.slice(0, 155)}>
@@ -22,6 +28,16 @@ const orderable = part.state === "measured" || part.state === "fitted";
         </div>
         <Stamp state={part.state} label={part.stateLabel} />
       </div>
+
+      {hasImage && (
+        <figure class="media">
+          <img src={imgSrc} alt={`${part.title} — reproduction render, neutral resin`}
+               width="1024" height="768" />
+          <figcaption>
+            Reproduction render · neutral resin{part.colors.length > 0 && ` · original came in ${part.colors.join(", ")} — yours can too`}
+          </figcaption>
+        </figure>
+      )}
 
       <div class="panel">
         <div class="brief">
@@ -85,6 +101,14 @@ const orderable = part.state === "measured" || part.state === "fitted";
   .crumbs a { text-decoration: none; }
   .head { display: flex; justify-content: space-between; align-items: start; gap: var(--space-4); margin-bottom: var(--space-5); flex-wrap: wrap; }
   h1 { font-size: 2rem; margin-top: 6px; }
+  .media { margin: 0 0 var(--space-5); max-width: 560px; background: var(--panel); border: var(--border-hairline) solid var(--panel-line); }
+  .media img { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; }
+  .media figcaption {
+    font-family: var(--font-mono); font-size: var(--text-xs);
+    letter-spacing: var(--tracking-label); text-transform: uppercase;
+    color: var(--panel-dim); padding: 8px 12px;
+    border-top: var(--border-hairline) solid var(--panel-line);
+  }
   .panel { background: var(--panel); color: var(--panel-fg); border: var(--border-hairline) solid var(--panel-line); }
   .brief { padding: var(--space-5); }
   .brief p { max-width: 70ch; margin: 0 0 var(--space-3); }

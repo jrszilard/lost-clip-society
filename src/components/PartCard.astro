@@ -1,8 +1,17 @@
 ---
+import fs from "node:fs";
+import path from "node:path";
 import type { Part } from "../lib/catalog";
 import Stamp from "./Stamp.astro";
 interface Props { part: Part }
 const { part } = Astro.props;
+
+// Imagery follows the state ladder: once a part is modeled it gets a neutral-resin
+// render at public/images/parts/<slug>.jpg (scripts/render-part.py). Until then the
+// card shows an honest "evidence pending" plate — we never fake a photo of a part
+// we haven't touched.
+const imgSrc = `/images/parts/${part.slug}.jpg`;
+const hasImage = fs.existsSync(path.join(process.cwd(), "public", "images", "parts", `${part.slug}.jpg`));
 
 const cta: Record<string, string> = {
   fitted: "Order this part",
@@ -22,9 +31,19 @@ const statePaint = statusPaint[part.state];
 ---
 <article class="case">
   <div class="cat-band" style={`background:${statePaint}`}></div>
-  <div class="thumb" role="img" aria-label={`${part.title} image placeholder`}>
-    <span>Image</span>
-  </div>
+  {hasImage ? (
+    <div class="thumb">
+      <img src={imgSrc} alt={`${part.title} — reproduction render, neutral resin`}
+           width="1024" height="768" loading="lazy" decoding="async" />
+    </div>
+  ) : (
+    <div class="thumb pending" role="img" aria-label={`${part.title} — no artwork yet; part is still requested`}>
+      <div class="pending-note">
+        <span class="pending-label">Evidence pending</span>
+        <span class="pending-sub">Awaiting an original —<br />artwork follows the donor part</span>
+      </div>
+    </div>
+  )}
   <div class="tab">
     <span>{part.oemNumber ? `OEM № ${part.oemNumber}` : "OEM № pending"}</span>
   </div>
@@ -46,11 +65,32 @@ const statePaint = statusPaint[part.state];
   .case:hover { transform: translateY(-3px); box-shadow: var(--shadow-card); }
   .cat-band { height: 5px; }
   .thumb {
-    aspect-ratio: 4 / 3;
+    position: relative; aspect-ratio: 4 / 3; min-height: 0;
     display: flex; align-items: center; justify-content: center;
     background: var(--bg-2); border-bottom: var(--border-hairline) solid var(--panel-line);
     color: var(--panel-dim); font-family: var(--font-mono); font-size: var(--text-xs);
     letter-spacing: var(--tracking-label); text-transform: uppercase;
+    overflow: hidden;
+  }
+  /* absolutely filled so the img can't feed its intrinsic height back into the
+     flex column and defeat the thumb's 4/3 ratio */
+  .thumb img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+  /* "Evidence pending" — graph-paper case-file plate for parts with no artifact yet.
+     Same blueprint ruling as the dimension tables; never a fake photo. */
+  .pending {
+    background:
+      repeating-linear-gradient(0deg, transparent, transparent 23px, rgba(15, 128, 196, 0.10) 24px),
+      repeating-linear-gradient(90deg, transparent, transparent 23px, rgba(15, 128, 196, 0.10) 24px),
+      var(--panel);
+  }
+  .pending-note { text-align: center; padding: 0 var(--space-3); }
+  .pending-label {
+    display: inline-block; border: 1.5px dashed var(--panel-dim); padding: 5px 10px;
+    letter-spacing: var(--tracking-label); color: var(--panel-dim);
+  }
+  .pending-sub {
+    display: block; margin-top: 10px; letter-spacing: 0.04em; line-height: 1.5;
+    text-transform: none; font-size: 0.66rem; opacity: 0.85;
   }
   .tab {
     font-family: var(--font-mono); font-size: var(--text-xs);
