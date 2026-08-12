@@ -9,4 +9,10 @@ import vercel from "@astrojs/vercel";
 export default defineConfig({
   site: "https://lostclipsociety.com",
   adapter: vercel(),
+  // checkOrigin compares the Origin header against the request URL's origin — but on
+  // Vercel, functions see their URL as https://localhost (host header never reaches the
+  // renderer), so EVERY browser form POST 403s in production while working in dev.
+  // Our only POSTs are the public request/membership forms: no session to ride, spam is
+  // handled by the honeypot. Off it goes.
+  security: { checkOrigin: false },
 });
