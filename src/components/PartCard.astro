@@ -29,7 +29,10 @@ const statusPaint: Record<string, string> = {
 };
 const statePaint = statusPaint[part.state];
 ---
-<article class="case">
+<article class="case"
+  data-state={part.state}
+  data-search={`${part.title} ${part.oemNumber ?? ""} ${part.supersededTo ?? ""} ${part.yearRange} ${part.category} toyota celica supra`.toLowerCase()}
+>
   <div class="cat-band" style={`background:${statePaint}`}></div>
   {hasImage ? (
     <div class="thumb">

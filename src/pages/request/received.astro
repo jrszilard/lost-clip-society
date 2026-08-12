@@ -1,0 +1,52 @@
+---
+import Base from "../../layouts/Base.astro";
+---
+<Base title="Case Received — The Lost Clip Society">
+  <section>
+    <div class="wrap narrow">
+      <div class="done">
+        <div class="done-stamp">Received</div>
+        <p class="done-case">Case № <b id="case-id">on file</b></p>
+        <p id="what">
+          The paper trail starts today. We’ll write from the workshop within a few days —
+          replies to that email go straight to your case file, photos welcome.
+        </p>
+        <p class="done-alt">
+          Nothing after a week? Email <a href="mailto:requests@lostclipsociety.com">requests@lostclipsociety.com</a>
+          and reference your case number.
+        </p>
+        <p><a class="btn ghost" href="/registry/">Back to the catalog</a></p>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<script>
+  const q = new URLSearchParams(location.search);
+  const caseId = q.get("case");
+  if (caseId) document.getElementById("case-id").textContent = caseId;
+  if (q.get("type") === "membership") {
+    document.getElementById("what").textContent =
+      "You’re in the book. The Missing Knob ships when a part moves forward — never for noise.";
+    document.querySelector(".done-stamp").textContent = "Member number claimed";
+  }
+</script>
+
+<style>
+  .narrow { max-width: 640px; }
+  .done {
+    background: var(--panel); color: var(--panel-fg); border: var(--border-hairline) solid var(--panel-line);
+    box-shadow: var(--shadow-card); padding: var(--space-5);
+  }
+  .done-stamp {
+    display: inline-block; font-family: var(--font-mono); font-size: var(--text-sm); font-weight: 700;
+    letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--status-measured);
+    border: var(--border-stamp) solid var(--status-measured); border-radius: var(--radius-stamp);
+    padding: 6px 10px; transform: rotate(-2deg); margin-bottom: var(--space-3);
+  }
+  .done-case { font-family: var(--font-mono); font-size: 0.95rem; }
+  .done p { color: var(--panel-dim); }
+  .done-case { color: var(--panel-fg); }
+  .done-alt { font-family: var(--font-mono); font-size: var(--text-xs); }
+  .done-alt a { color: var(--action); }
+</style>

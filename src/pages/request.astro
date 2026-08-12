@@ -21,24 +21,183 @@ import Base from "../layouts/Base.astro";
           on your car, and those are what determine fit. Shape comes from records; fit comes
           from your car. We’ll source a donor if one exists.</div>
       </div>
-      <p class="note">
-        The request form is coming online with the shop. Until then:
-        <a href="mailto:requests@lostclipsociety.com">requests@lostclipsociety.com</a> — include
-        year, model, and your best description. Photos welcome. Laughter optional.
-      </p>
+
+      <form id="case-form" class="case-file" method="post" action="/api/request">
+        <div class="cf-head">
+          <span class="cf-title">New case file</span>
+          <span class="cf-no">INTAKE FORM LCS-1</span>
+        </div>
+        <input type="hidden" name="type" value="request" />
+        <!-- honeypot: invisible to people, irresistible to bots -->
+        <input type="text" name="company" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true" />
+
+        <div class="grid">
+          <label>Your name
+            <input type="text" name="name" required autocomplete="name" />
+          </label>
+          <label>Email
+            <input type="email" name="email" required autocomplete="email" placeholder="you@garage.example" />
+          </label>
+          <label>The car
+            <input type="text" name="vehicle" required placeholder="1984 Toyota Celica Supra" />
+          </label>
+          <label>The part
+            <input type="text" name="part" required placeholder="Sun visor clip, driver side" />
+          </label>
+          <label>OEM part № <span class="opt">if you have it</span>
+            <input type="text" name="oem" placeholder="74348-12010-14" />
+          </label>
+          <label>Where is the part now?
+            <select name="situation">
+              <option value="have-part">I have the old part (even broken)</option>
+              <option value="on-car">It’s on the car, and it’s staying there</option>
+              <option value="gone">Gone entirely</option>
+              <option value="" selected>Not sure / it’s complicated</option>
+            </select>
+          </label>
+        </div>
+        <label class="full">Anything else
+          <textarea name="message" rows="4" placeholder="Cracked where? Brittle how? Photos help — send them after you submit and we’ll match them to your case."></textarea>
+        </label>
+
+        <div class="cf-foot">
+          <button class="btn primary" type="submit">Open a case file</button>
+          <span class="cap">We write back within a few days, with the paper trail. Never spam.</span>
+        </div>
+        <p class="form-error" id="form-error" hidden></p>
+      </form>
+
+      <div class="done" id="case-done" hidden>
+        <div class="done-stamp">Case opened</div>
+        <p class="done-case">Case № <b id="case-id">—</b></p>
+        <p>
+          The paper trail starts today. We’ll write from the workshop within a few days —
+          replies to that email go straight to your case file, photos welcome.
+        </p>
+        <p class="done-alt">
+          Nothing after a week? Email <a href="mailto:requests@lostclipsociety.com">requests@lostclipsociety.com</a>
+          and reference your case number.
+        </p>
+      </div>
+
+      <noscript>
+        <p class="note">Submitting without JavaScript sends the same form — you’ll land on a
+        confirmation page, or your mail app will open with everything pre-filled.</p>
+      </noscript>
     </div>
   </section>
 </Base>
+
+<script>
+  const form = document.getElementById("case-form") as HTMLFormElement;
+  const done = document.getElementById("case-done");
+  const errBox = document.getElementById("form-error");
+
+  // Registry empty states deep-link here with ?part=…
+  const q = new URLSearchParams(location.search).get("part");
+  if (q) {
+    const partInput = form.elements.namedItem("part") as HTMLInputElement;
+    if (partInput && !partInput.value) partInput.value = q;
+  }
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    errBox.hidden = true;
+    const btn = form.querySelector("button[type=submit]") as HTMLButtonElement;
+    btn.disabled = true;
+    btn.textContent = "Filing…";
+    try {
+      const res = await fetch(form.action, {
+        method: "POST",
+        body: new FormData(form),
+        headers: { accept: "application/json" },
+      });
+      const data = await res.json();
+      if (res.ok && data.ok) {
+        document.getElementById("case-id").textContent = data.case;
+        form.hidden = true;
+        done.hidden = false;
+        done.scrollIntoView({ behavior: "smooth", block: "center" });
+      } else if (data.unconfigured) {
+        // Backend not wired yet — fall back to a prefilled email.
+        const f = new FormData(form);
+        const subject = `Part request — ${f.get("part")} (${f.get("vehicle")})`;
+        const body = [
+          `Name: ${f.get("name")}`, `Email: ${f.get("email")}`, `Vehicle: ${f.get("vehicle")}`,
+          `Part: ${f.get("part")}`, `OEM №: ${f.get("oem") || "—"}`,
+          `Situation: ${(f.get("situation") as string) || "—"}`, "", (f.get("message") as string) || "",
+        ].join("\n");
+        window.location.href = `mailto:requests@lostclipsociety.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+      } else {
+        throw new Error(data.error ?? "failed");
+      }
+    } catch (err) {
+      errBox.textContent = "That didn’t file. Check the required fields and try again — or email requests@lostclipsociety.com directly.";
+      errBox.hidden = false;
+      btn.disabled = false;
+      btn.textContent = "Open a case file";
+    }
+  });
+</script>
 
 <style>
   .narrow { max-width: 720px; }
   h1 { font-size: 2rem; margin: 8px 0 var(--space-4); }
   p { color: var(--fg-dim); }
-  .tiers { display: grid; gap: var(--space-3); margin: var(--space-4) 0; }
+  .tiers { display: grid; gap: var(--space-3); margin: var(--space-4) 0 var(--space-5); }
   .tier {
     background: var(--bg-2); border: var(--border-hairline) solid var(--edge);
     padding: var(--space-4); font-size: 0.9rem; color: var(--fg-dim);
   }
   .tier b { color: var(--fg); display: block; margin-bottom: 4px; font-family: var(--font-display); }
+
+  /* The intake form is a paper case file: bright panel, mono field labels. */
+  .case-file {
+    background: var(--panel); color: var(--panel-fg);
+    border: var(--border-hairline) solid var(--panel-line);
+    box-shadow: var(--shadow-card); padding: var(--space-5);
+  }
+  .cf-head {
+    display: flex; justify-content: space-between; align-items: baseline; gap: var(--space-3);
+    border-bottom: 2px solid var(--brand-oxblood); padding-bottom: 10px; margin-bottom: var(--space-4);
+  }
+  .cf-title { font-family: var(--font-display); font-size: 1.05rem; }
+  .cf-no { font-family: var(--font-mono); font-size: var(--text-xs); color: var(--brand-oxblood); font-weight: 700; letter-spacing: var(--tracking-label); }
+  .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-3) var(--space-4); }
+  @media (max-width: 640px) { .grid { grid-template-columns: 1fr; } }
+  label {
+    display: grid; gap: 6px; font-family: var(--font-mono); font-size: var(--text-xs);
+    letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--panel-dim);
+  }
+  label .opt { text-transform: none; letter-spacing: 0.02em; opacity: 0.75; }
+  input, select, textarea {
+    font-family: var(--font-mono); font-size: 0.85rem; padding: 11px 12px;
+    background: var(--bg-2); border: var(--border-hairline) solid var(--edge); color: var(--fg);
+    letter-spacing: normal; text-transform: none; width: 100%; box-sizing: border-box;
+  }
+  input:focus, select:focus, textarea:focus { outline: 2px solid var(--action); outline-offset: 1px; }
+  .full { margin-top: var(--space-4); }
+  textarea { resize: vertical; }
+
+  .cf-foot { display: flex; align-items: center; gap: var(--space-3); margin-top: var(--space-4); flex-wrap: wrap; }
+  .cap { font-family: var(--font-mono); font-size: var(--text-xs); color: var(--panel-dim); max-width: 40ch; }
+  .form-error { color: var(--status-requested); font-family: var(--font-mono); font-size: var(--text-sm); margin: var(--space-3) 0 0; }
+
+  .done {
+    background: var(--panel); color: var(--panel-fg); border: var(--border-hairline) solid var(--panel-line);
+    box-shadow: var(--shadow-card); padding: var(--space-5); text-align: left;
+  }
+  .done-stamp {
+    display: inline-block; font-family: var(--font-mono); font-size: var(--text-sm); font-weight: 700;
+    letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--status-measured);
+    border: var(--border-stamp) solid var(--status-measured); border-radius: var(--radius-stamp);
+    padding: 6px 10px; transform: rotate(-2deg); margin-bottom: var(--space-3);
+  }
+  .done-case { font-family: var(--font-mono); font-size: 0.95rem; color: var(--panel-fg); }
+  .done p { color: var(--panel-dim); }
+  .done-alt { font-family: var(--font-mono); font-size: var(--text-xs); }
+  .done-alt a { color: var(--action); }
   .note a { color: var(--accent); }
 </style>

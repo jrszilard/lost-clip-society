@@ -98,10 +98,13 @@ const featured = parts.slice(0, 3);
           when their part reaches production, and share fit reports that make every listing more
           trustworthy. The parts cost money. Membership never does.
         </p>
-        <div class="join-row">
-          <input type="email" placeholder="you@garage.example" aria-label="Email address" />
-          <a class="btn primary" href="#society">Claim a member number</a>
-        </div>
+        <form class="join-row" id="join-form" method="post" action="/api/request">
+          <input type="hidden" name="type" value="membership" />
+          <input type="text" name="company" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true" />
+          <input type="email" name="email" required placeholder="you@garage.example" aria-label="Email address" />
+          <button class="btn primary" type="submit">Claim a member number</button>
+        </form>
+        <p class="join-done" id="join-done" hidden>You’re in the book. The bulletin ships when a part moves — never for noise.</p>
         <small>Members get <b>The Missing Knob</b>, our bulletin. It ships only when a part moves forward.</small>
       </div>
       <div class="m-card" role="img" aria-label="Sample membership card">
@@ -120,6 +123,34 @@ const featured = parts.slice(0, 3);
     </div>
   </section>
 </Base>
+
+<script>
+  const joinForm = document.getElementById("join-form") as HTMLFormElement;
+  joinForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const btn = joinForm.querySelector("button") as HTMLButtonElement;
+    btn.disabled = true;
+    try {
+      const res = await fetch(joinForm.action, {
+        method: "POST",
+        body: new FormData(joinForm),
+        headers: { accept: "application/json" },
+      });
+      const data = await res.json();
+      if (res.ok && data.ok) {
+        joinForm.hidden = true;
+        document.getElementById("join-done").hidden = false;
+      } else if (data.unconfigured) {
+        const email = (new FormData(joinForm).get("email") as string) ?? "";
+        window.location.href = `mailto:requests@lostclipsociety.com?subject=${encodeURIComponent("Membership — The Lost Clip Society")}&body=${encodeURIComponent("Sign me up: " + email)}`;
+      } else {
+        btn.disabled = false;
+      }
+    } catch {
+      btn.disabled = false;
+    }
+  });
+</script>
 
 <style>
   .hero { display: grid; grid-template-columns: 1.25fr 0.75fr; gap: var(--space-6); align-items: center; padding: var(--space-7) 24px 56px; }
@@ -199,6 +230,9 @@ const featured = parts.slice(0, 3);
   .join h2 { font-size: 1.7rem; margin-bottom: 10px; }
   .join p { color: var(--fg-dim); max-width: 52ch; }
   .join-row { display: flex; gap: 10px; margin-top: 18px; flex-wrap: wrap; }
+  .join-row[hidden] { display: none; }
+  .join-row .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+  .join-done { font-family: var(--font-mono); font-size: 0.85rem; color: var(--status-measured); margin-top: 14px; }
   .join-row input { font-family: var(--font-mono); font-size: 0.85rem; padding: 12px 14px; min-width: 240px; background: var(--bg-2); border: var(--border-hairline) solid var(--edge); color: var(--fg); }
   .join small { display: block; margin-top: 10px; font-family: var(--font-mono); font-size: var(--text-xs); color: var(--fg-dim); }
 
