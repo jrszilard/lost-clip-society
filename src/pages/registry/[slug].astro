@@ -67,9 +67,18 @@ const hasImage = fs.existsSync(path.join(process.cwd(), "public", "images", "par
                 <span class="cap">In development — reserving bumps it up the queue and locks your place</span>
               </div>
             ) : (
-              <div class="row">
-                <a class="btn primary" href="/request/">Vote or sponsor</a>
-                <span class="cap">Not started yet — votes move it up the queue; sponsoring starts it now</span>
+              <div class="vote-block">
+                <div class="demand-line" data-demand-line data-part={part.slug} hidden></div>
+                <form class="vote-row" data-vote-form data-part={part.slug} method="post" action="/api/request">
+                  <input type="hidden" name="type" value="vote" />
+                  <input type="hidden" name="part_slug" value={part.slug} />
+                  <input type="text" name="company" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true" />
+                  <input type="email" name="email" required placeholder="you@garage.example" aria-label="Email address" />
+                  <button class="btn primary" type="submit">Vote for this part</button>
+                </form>
+                <span class="cap vote-done" data-vote-done hidden></span>
+                <span class="cap">Not started yet — one vote per member, votes move it up the queue.
+                  Or <a href={`/request/?part=${encodeURIComponent(part.title)}&part_slug=${part.slug}`}>open a full case file</a> — sponsoring starts it now.</span>
               </div>
             )}
           </div>
@@ -95,6 +104,57 @@ const hasImage = fs.existsSync(path.join(process.cwd(), "public", "images", "par
     </div>
   </section>
 </Base>
+
+<script>
+  const line = document.querySelector("[data-demand-line]") as HTMLElement;
+  const voteForm = document.querySelector("[data-vote-form]") as HTMLFormElement;
+  const voteDone = document.querySelector("[data-vote-done]") as HTMLElement;
+
+  function renderDemand(d: { votes: number; requests: number; total: number }) {
+    line.innerHTML = d.total === 0
+      ? "Nothing on the want-list yet — your vote starts the queue."
+      : `On the want-list: <b>${d.votes}</b> vote${d.votes === 1 ? "" : "s"} · <b>${d.requests}</b> case file${d.requests === 1 ? "" : "s"}`;
+    line.hidden = false;
+  }
+
+  if (line && voteForm) {
+    const slug = line.dataset.part;
+    fetch(`/api/demand?part=${slug}`)
+      .then((r) => r.json())
+      .then((d) => { if (d.configured !== false) renderDemand(d); })
+      .catch(() => {});
+
+    voteForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const btn = voteForm.querySelector("button") as HTMLButtonElement;
+      btn.disabled = true;
+      try {
+        const res = await fetch(voteForm.action, {
+          method: "POST",
+          body: new FormData(voteForm),
+          headers: { accept: "application/json" },
+        });
+        const data = await res.json();
+        if (res.ok && data.ok) {
+          voteForm.hidden = true;
+          voteDone.textContent = data.duplicate
+            ? "That email is already on the want-list for this part."
+            : "Vote counted — it's on the ledger.";
+          voteDone.hidden = false;
+          if (!data.duplicate && !line.hidden) {
+            fetch(`/api/demand?part=${slug}&fresh=${Date.now()}`).then((r) => r.json()).then(renderDemand).catch(() => {});
+          }
+        } else if (data.unconfigured) {
+          window.location.href = `/request/?part=${slug}`;
+        } else {
+          btn.disabled = false;
+        }
+      } catch {
+        btn.disabled = false;
+      }
+    });
+  }
+</script>
 
 <style>
   .crumbs { font-family: var(--font-mono); font-size: var(--text-xs); color: var(--fg-dim); margin-bottom: var(--space-4); text-transform: uppercase; letter-spacing: 0.1em; }
@@ -125,6 +185,14 @@ const hasImage = fs.existsSync(path.join(process.cwd(), "public", "images", "par
   .assist p { font-size: 0.82rem; margin: 0 0 10px; }
   .assist a { font-family: var(--font-mono); font-size: var(--text-xs); color: var(--panel-dim); margin-right: var(--space-3); }
   .assist a:hover { color: var(--action); }
+  .vote-block { display: grid; gap: 10px; }
+  .vote-row { display: flex; gap: 10px; flex-wrap: wrap; }
+  .vote-row[hidden] { display: none; }
+  .vote-row .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+  .vote-row input { font-family: var(--font-mono); font-size: 0.85rem; padding: 11px 12px; min-width: 220px; background: var(--bg-2); border: var(--border-hairline) solid var(--edge); color: var(--fg); }
+  .demand-line { font-family: var(--font-mono); font-size: var(--text-xs); letter-spacing: 0.04em; color: var(--panel-dim); }
+  .demand-line b { color: var(--action); }
+  .vote-done { color: var(--status-measured); font-weight: 700; }
   .testimony { margin-top: var(--space-5); }
   .testimony h2 { font-size: var(--text-lg); margin-bottom: var(--space-3); }
   .report { font-family: var(--font-mono); font-size: 0.78rem; color: var(--fg-dim); border-left: 3px solid var(--status-measured); padding: 10px 14px; margin-bottom: var(--space-2); }

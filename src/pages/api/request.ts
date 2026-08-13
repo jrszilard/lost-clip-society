@@ -69,6 +69,33 @@ async function deliver(subject: string, body: string, clientId: string): Promise
   return "unconfigured";
 }
 
+/**
+ * Record a demand row (best-effort — a DB hiccup must never lose a submission;
+ * the email already went out). Votes dedup via partial unique index; a conflict
+ * just means this email already voted for this part.
+ */
+async function record(row: Record<string, string | null>): Promise<"ok" | "duplicate" | "unconfigured" | "error"> {
+  const sbUrl = import.meta.env.SUPABASE_URL?.trim();
+  const sbKey = import.meta.env.SUPABASE_SERVICE_ROLE_KEY?.trim();
+  if (!sbUrl || !sbKey) return "unconfigured";
+  try {
+    const res = await fetch(`${sbUrl}/rest/v1/demand_signals`, {
+      method: "POST",
+      headers: {
+        apikey: sbKey,
+        Authorization: `Bearer ${sbKey}`,
+        "Content-Type": "application/json",
+        Prefer: "return=minimal",
+      },
+      body: JSON.stringify(row),
+    });
+    if (res.status === 409) return "duplicate";
+    return res.ok ? "ok" : "error";
+  } catch {
+    return "error";
+  }
+}
+
 const wantsJson = (request: Request) => (request.headers.get("accept") ?? "").includes("application/json");
 
 function respond(request: Request, json: object, status: number, redirectTo: string) {
@@ -103,8 +130,23 @@ export const POST: APIRoute = async ({ request }) => {
       if (via === "unconfigured") {
         return respond(request, { ok: false, unconfigured: true }, 503, mailtoFallback("Membership — The Lost Clip Society", `Sign me up: ${email}`));
       }
+      await record({ type: "membership", email, case_id: caseId });
     }
     return respond(request, { ok: true, case: caseId }, 200, `/request/received/?case=${caseId}&type=membership`);
+  }
+
+  // One-click vote for a catalog part — the demand ledger's lightest signal.
+  if (type === "vote") {
+    const partSlug = String(form.get("part_slug") ?? "").trim();
+    if (!/^[a-z0-9-]+$/.test(partSlug)) {
+      return respond(request, { ok: false, error: "part" }, 400, "/registry/");
+    }
+    if (bot) return respond(request, { ok: true }, 200, `/registry/${partSlug}/`);
+    const via = await record({ type: "vote", email, part_slug: partSlug });
+    if (via === "unconfigured") {
+      return respond(request, { ok: false, unconfigured: true }, 503, `/request/?part=${encodeURIComponent(partSlug)}`);
+    }
+    return respond(request, { ok: true, duplicate: via === "duplicate" }, 200, `/registry/${partSlug}/`);
   }
 
   // Part request
@@ -135,12 +177,18 @@ export const POST: APIRoute = async ({ request }) => {
     message ? `Notes:\n${message}` : "Notes: —", "",
     "Reply directly to the requester; reference the case number.",
   );
+  const partSlug = String(form.get("part_slug") ?? "").trim();
   if (!bot) {
     const via = await deliver(subject, body, caseId);
     if (via === "unconfigured") {
       return respond(request, { ok: false, unconfigured: true }, 503,
         mailtoFallback(subject, `${body}\n\n(sent via email — the online desk isn't plugged in yet)`));
     }
+    await record({
+      type: "request", email, case_id: caseId, vehicle,
+      part_text: part, oem: oem || null, situation: situationLabel || null,
+      part_slug: /^[a-z0-9-]+$/.test(partSlug) ? partSlug : null,
+    });
   }
   return respond(request, { ok: true, case: caseId }, 200, `/request/received/?case=${caseId}&type=request`);
 };
