@@ -146,6 +146,9 @@ export const POST: APIRoute = async ({ request }) => {
     if (via === "unconfigured") {
       return respond(request, { ok: false, unconfigured: true }, 503, `/request/?part=${encodeURIComponent(partSlug)}`);
     }
+    if (via === "error") {
+      return respond(request, { ok: false, error: "db" }, 502, `/registry/${partSlug}/`);
+    }
     return respond(request, { ok: true, duplicate: via === "duplicate" }, 200, `/registry/${partSlug}/`);
   }
 

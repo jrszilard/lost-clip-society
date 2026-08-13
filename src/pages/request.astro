@@ -28,6 +28,7 @@ import Base from "../layouts/Base.astro";
           <span class="cf-no">INTAKE FORM LCS-1</span>
         </div>
         <input type="hidden" name="type" value="request" />
+        <input type="hidden" name="part_slug" value="" />
         <!-- honeypot: invisible to people, irresistible to bots -->
         <input type="text" name="company" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true" />
 
@@ -93,11 +94,17 @@ import Base from "../layouts/Base.astro";
   const done = document.getElementById("case-done");
   const errBox = document.getElementById("form-error");
 
-  // Registry empty states deep-link here with ?part=…
-  const q = new URLSearchParams(location.search).get("part");
-  if (q) {
+  // Registry empty states deep-link here with the human title and stable catalog slug.
+  const params = new URLSearchParams(location.search);
+  const partTitle = params.get("part");
+  const partSlug = params.get("part_slug");
+  if (partTitle) {
     const partInput = form.elements.namedItem("part") as HTMLInputElement;
-    if (partInput && !partInput.value) partInput.value = q;
+    if (partInput && !partInput.value) partInput.value = partTitle;
+  }
+  if (partSlug && /^[a-z0-9-]+$/.test(partSlug)) {
+    const slugInput = form.elements.namedItem("part_slug") as HTMLInputElement;
+    if (slugInput) slugInput.value = partSlug;
   }
 
   form.addEventListener("submit", async (e) => {
