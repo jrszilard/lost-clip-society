@@ -30,4 +30,4 @@ create index if not exists demand_signals_part on public.demand_signals (part_sl
 
 alter table public.demand_signals enable row level security;
 -- no policies = no access for anon/authenticated; service role bypasses RLS.
-revoke all on public.demand_signals from public;
+revoke all on public.demand_signals from public, anon, authenticated;
