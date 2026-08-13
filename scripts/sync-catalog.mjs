@@ -12,6 +12,7 @@ import { readFileSync, writeFileSync, readdirSync, existsSync, statSync } from "
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import yaml from "js-yaml";
+import { projectOem } from "./catalog-projection.mjs";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const venture = process.argv[2] ?? join(here, "..", "..", "3d-car-parts-maker");
@@ -83,19 +84,20 @@ for (const path of walk(join(venture, "catalog"))) {
   }
 
   const years = e.fits?.[0]?.year_range;
-  const chain = e.supersession?.chain ?? [];
+  const oem = projectOem(e);
   parts.push({
     slug,
     catalogId: e.catalog_id,
-    oemNumber: e.oem?.part_numbers?.[0]?.number ?? null,
+    oemIdentityStatus: oem.oemIdentityStatus,
+    oemNumber: oem.oemNumber,
     title: e.title ?? slug,
     description: (e.description ?? "").trim(),
     yearRange: years ? `’${String(years[0]).slice(2)}–’${String(years[1]).slice(2)}` : "",
     category: e.category ?? "",
     state,
     stateLabel: STATE_LABELS[state],
-    colors: (e.color_finish?.oem_colors ?? []).map((c) => c.name).filter(Boolean),
-    supersededTo: chain.length > 1 ? chain[chain.length - 1]?.part_number ?? null : null,
+    colors: oem.colors,
+    supersededTo: oem.supersededTo,
     dims,
     dimsConfirmed: dims.filter((d) => d.confidence === "confirmed").length,
     dimsTotal: dims.length,

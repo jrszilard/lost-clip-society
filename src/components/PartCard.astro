@@ -1,7 +1,7 @@
 ---
 import fs from "node:fs";
 import path from "node:path";
-import type { Part } from "../lib/catalog";
+import { oemIdentityLabel, type Part } from "../lib/catalog";
 import Stamp from "./Stamp.astro";
 interface Props { part: Part }
 const { part } = Astro.props;
@@ -28,6 +28,7 @@ const statusPaint: Record<string, string> = {
   fitted: "var(--status-measured)",
 };
 const statePaint = statusPaint[part.state];
+const oemLabel = oemIdentityLabel(part);
 ---
 <article class="case"
   data-state={part.state}
@@ -48,7 +49,7 @@ const statePaint = statusPaint[part.state];
     </div>
   )}
   <div class="tab">
-    <span>{part.oemNumber ? `OEM № ${part.oemNumber}` : "OEM № pending"}</span>
+    <span>{oemLabel}</span>
   </div>
   <h3><a href={`/registry/${part.slug}/`}>{part.title}</a></h3>
   <div class="meta">{part.yearRange} Toyota Celica Supra{part.colors.length > 1 ? ` · originally ${part.colors.length} colors` : ""}</div>

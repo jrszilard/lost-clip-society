@@ -4,26 +4,33 @@ import path from "node:path";
 import Base from "../../layouts/Base.astro";
 import Stamp from "../../components/Stamp.astro";
 import SpecTable from "../../components/SpecTable.astro";
-import { allParts } from "../../lib/catalog";
+import { allParts, oemIdentityLabel } from "../../lib/catalog";
 
 export function getStaticPaths() {
   return allParts().map((part) => ({ params: { slug: part.slug }, props: { part } }));
 }
 const { part } = Astro.props;
 const orderable = part.state === "measured" || part.state === "fitted";
+const oemLabel = oemIdentityLabel(part);
+const identityDisputed = part.oemIdentityStatus === "disputed";
+const identityTitle = part.oemNumber
+  ? `OEM ${part.oemNumber} reproduction`
+  : identityDisputed
+    ? "OEM identity under investigation"
+    : "OEM identity pending";
 
 // Neutral-resin render, once the part is modeled (scripts/render-part.py).
 const imgSrc = `/images/parts/${part.slug}.jpg`;
 const hasImage = fs.existsSync(path.join(process.cwd(), "public", "images", "parts", `${part.slug}.jpg`));
 ---
-<Base title={`${part.title} — ${part.oemNumber ?? "OEM"} reproduction — The Lost Clip Society`}
+<Base title={`${part.title} — ${identityTitle} — The Lost Clip Society`}
       description={part.description.slice(0, 155)}>
   <section>
     <div class="wrap">
       <div class="crumbs"><a href="/registry/">Catalog</a> / {part.title}</div>
       <div class="head">
         <div>
-          <div class="eyebrow">{part.oemNumber ? `OEM № ${part.oemNumber}` : "OEM № pending"} · {part.yearRange} Toyota Celica Supra</div>
+          <div class="eyebrow">{oemLabel} · {part.yearRange} Toyota Celica Supra</div>
           <h1>{part.title}</h1>
         </div>
         <Stamp state={part.state} label={part.stateLabel} />
@@ -42,6 +49,14 @@ const hasImage = fs.existsSync(path.join(process.cwd(), "public", "images", "par
       <div class="panel">
         <div class="brief">
           <p>{part.description}</p>
+          {identityDisputed && (
+            <p class="identity-notice" role="note">
+              <b>OEM identity under investigation.</b> The measured object and this permanent case
+              file stay on record, but an earlier catalog assignment did not match the demonstrated
+              part architecture. The number stays unpublished until mounting-location and donor
+              evidence agree.
+            </p>
+          )}
           {part.supersededTo && (
             <p class="paper-trail">
               <b>The paper trail:</b> superseded to {part.supersededTo}
@@ -173,6 +188,12 @@ const hasImage = fs.existsSync(path.join(process.cwd(), "public", "images", "par
   .brief { padding: var(--space-5); }
   .brief p { max-width: 70ch; margin: 0 0 var(--space-3); }
   .paper-trail { font-size: 0.88rem; color: var(--panel-dim); }
+  .identity-notice {
+    max-width: 70ch; padding: 12px 14px; border-left: 3px solid var(--status-development);
+    background: color-mix(in srgb, var(--status-development) 10%, transparent);
+    color: var(--panel-dim); font-size: 0.88rem;
+  }
+  .identity-notice b { color: var(--panel-fg); }
   .actions { display: grid; grid-template-columns: 1.2fr 1fr; border-top: var(--border-hairline) solid var(--panel-line); }
   @media (max-width: 820px) { .actions { grid-template-columns: 1fr; } }
   .commission { padding: var(--space-4) var(--space-5); background: var(--brand-cream-2); border-right: var(--border-hairline) solid var(--panel-line); }

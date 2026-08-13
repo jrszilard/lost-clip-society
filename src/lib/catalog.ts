@@ -11,12 +11,14 @@
 import raw from "../data/parts.json";
 
 export type PartState = "requested" | "development" | "measured" | "fitted";
+export type OemIdentityStatus = "confirmed" | "candidate" | "disputed" | "unknown";
 
 export interface Dim { name: string; mm: number | null; confidence: string }
 export interface FitReport { vehicle: string; material: string; result: string }
 export interface Part {
   slug: string;
   catalogId: string;
+  oemIdentityStatus: OemIdentityStatus;
   oemNumber: string | null;
   title: string;
   description: string;
@@ -34,4 +36,13 @@ export interface Part {
 
 export function allParts(): Part[] {
   return raw as Part[];
+}
+
+export function oemIdentityLabel(part: Part): string {
+  if (part.oemIdentityStatus === "confirmed" && part.oemNumber) {
+    return `OEM № ${part.oemNumber}`;
+  }
+  if (part.oemIdentityStatus === "disputed") return "OEM identity under investigation";
+  if (part.oemIdentityStatus === "candidate") return "OEM identity being verified";
+  return "OEM № pending";
 }
