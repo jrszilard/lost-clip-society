@@ -4,7 +4,7 @@ import path from "node:path";
 import Base from "../../layouts/Base.astro";
 import Stamp from "../../components/Stamp.astro";
 import SpecTable from "../../components/SpecTable.astro";
-import { allParts, oemIdentityLabel } from "../../lib/catalog";
+import { allParts, fitmentLabel, oemIdentityLabel } from "../../lib/catalog";
 
 export function getStaticPaths() {
   return allParts().map((part) => ({ params: { slug: part.slug }, props: { part } }));
@@ -13,6 +13,9 @@ const { part } = Astro.props;
 const orderable = part.state === "measured" || part.state === "fitted";
 const oemLabel = oemIdentityLabel(part);
 const identityDisputed = part.oemIdentityStatus === "disputed";
+const fitmentUnconfirmed = part.fitmentStatus !== "confirmed";
+const fitmentDisputed = part.fitmentStatus === "disputed";
+const vehicleFitment = fitmentLabel(part);
 const identityTitle = part.oemNumber
   ? `OEM ${part.oemNumber} reproduction`
   : identityDisputed
@@ -30,7 +33,7 @@ const hasImage = fs.existsSync(path.join(process.cwd(), "public", "images", "par
       <div class="crumbs"><a href="/registry/">Catalog</a> / {part.title}</div>
       <div class="head">
         <div>
-          <div class="eyebrow">{oemLabel} · {part.yearRange} Toyota Celica Supra</div>
+          <div class="eyebrow">{oemLabel} · {vehicleFitment}</div>
           <h1>{part.title}</h1>
         </div>
         <Stamp state={part.state} label={part.stateLabel} />
@@ -55,6 +58,22 @@ const hasImage = fs.existsSync(path.join(process.cwd(), "public", "images", "par
               file stay on record, but an earlier catalog assignment did not match the demonstrated
               part architecture. The number stays unpublished until mounting-location and donor
               evidence agree.
+            </p>
+          )}
+          {fitmentUnconfirmed && (
+            <p class="identity-notice" role="note">
+              {fitmentDisputed ? (
+                <>
+                  <b>Vehicle/trim fitment under investigation.</b> This OEM handle family is real,
+                  but the earlier Celica Supra application combined a broad catalog row with an MA61
+                  diagram that contains separate manual- and power-window branches. Toyota’s 1982–1984
+                  U.S. Celica Supra brochures list power windows on both Supra trims. We will not
+                  call this a Supra part unless a market- and trim-specific manual-window build record
+                  proves it.
+                </>
+              ) : (
+                <><b>Vehicle/trim fitment is not yet confirmed.</b> Model, market, trim, and equipment evidence must agree before this case file makes a vehicle claim.</>
+              )}
             </p>
           )}
           {part.supersededTo && (

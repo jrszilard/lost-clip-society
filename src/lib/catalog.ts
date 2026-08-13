@@ -12,6 +12,7 @@ import raw from "../data/parts.json";
 
 export type PartState = "requested" | "development" | "measured" | "fitted";
 export type OemIdentityStatus = "confirmed" | "candidate" | "disputed" | "unknown";
+export type FitmentStatus = "confirmed" | "candidate" | "disputed" | "unknown";
 
 export interface Dim { name: string; mm: number | null; confidence: string }
 export interface FitReport { vehicle: string; material: string; result: string }
@@ -22,6 +23,8 @@ export interface Part {
   oemNumber: string | null;
   title: string;
   description: string;
+  fitmentStatus: FitmentStatus;
+  vehicleLabel: string | null;
   yearRange: string;
   category: string;
   state: PartState;
@@ -36,6 +39,15 @@ export interface Part {
 
 export function allParts(): Part[] {
   return raw as Part[];
+}
+
+export function fitmentLabel(part: Part): string {
+  if (part.fitmentStatus === "confirmed" && part.vehicleLabel) {
+    return `${part.yearRange} ${part.vehicleLabel}`.trim();
+  }
+  if (part.fitmentStatus === "disputed") return "Vehicle/trim fitment under investigation";
+  if (part.fitmentStatus === "candidate") return "Vehicle/trim fitment being verified";
+  return "Vehicle/trim fitment pending";
 }
 
 export function oemIdentityLabel(part: Part): string {

@@ -12,7 +12,7 @@ import { readFileSync, writeFileSync, readdirSync, existsSync, statSync } from "
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import yaml from "js-yaml";
-import { projectOem } from "./catalog-projection.mjs";
+import { projectFitment, projectOem } from "./catalog-projection.mjs";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const venture = process.argv[2] ?? join(here, "..", "..", "3d-car-parts-maker");
@@ -83,7 +83,8 @@ for (const path of walk(join(venture, "catalog"))) {
         : "development";
   }
 
-  const years = e.fits?.[0]?.year_range;
+  const fitment = projectFitment(e);
+  const years = fitment.yearRange;
   const oem = projectOem(e);
   parts.push({
     slug,
@@ -92,6 +93,8 @@ for (const path of walk(join(venture, "catalog"))) {
     oemNumber: oem.oemNumber,
     title: e.title ?? slug,
     description: (e.description ?? "").trim(),
+    fitmentStatus: fitment.fitmentStatus,
+    vehicleLabel: fitment.vehicleLabel,
     yearRange: years ? `’${String(years[0]).slice(2)}–’${String(years[1]).slice(2)}` : "",
     category: e.category ?? "",
     state,

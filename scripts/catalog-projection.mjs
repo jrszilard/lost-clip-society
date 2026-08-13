@@ -1,4 +1,5 @@
 const OEM_IDENTITY_STATUSES = new Set(["confirmed", "candidate", "disputed", "unknown"]);
+const FITMENT_STATUSES = new Set(["confirmed", "candidate", "disputed", "unknown"]);
 
 /**
  * Project private OEM research into public-safe fields.
@@ -8,6 +9,21 @@ const OEM_IDENTITY_STATUSES = new Set(["confirmed", "candidate", "disputed", "un
  * after the entry-level identity linkage is explicitly confirmed. Missing or invalid status is
  * fail-closed as "unknown".
  */
+export function projectFitment(entry) {
+  const fits = Array.isArray(entry?.fits) ? entry.fits : [];
+  const fit = fits[0] ?? null;
+  const rawStatus = fit?.status;
+  const fitmentStatus = FITMENT_STATUSES.has(rawStatus) ? rawStatus : "unknown";
+
+  return {
+    fitmentStatus,
+    yearRange: fitmentStatus === "confirmed" ? fit?.year_range ?? null : null,
+    vehicleLabel: fitmentStatus === "confirmed"
+      ? [fit?.make, fit?.model].filter(Boolean).join(" ") || null
+      : null,
+  };
+}
+
 export function projectOem(entry) {
   const rawStatus = entry?.oem?.identity?.status;
   const oemIdentityStatus = OEM_IDENTITY_STATUSES.has(rawStatus) ? rawStatus : "unknown";

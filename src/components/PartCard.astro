@@ -1,7 +1,7 @@
 ---
 import fs from "node:fs";
 import path from "node:path";
-import { oemIdentityLabel, type Part } from "../lib/catalog";
+import { fitmentLabel, oemIdentityLabel, type Part } from "../lib/catalog";
 import Stamp from "./Stamp.astro";
 interface Props { part: Part }
 const { part } = Astro.props;
@@ -29,10 +29,11 @@ const statusPaint: Record<string, string> = {
 };
 const statePaint = statusPaint[part.state];
 const oemLabel = oemIdentityLabel(part);
+const vehicleFitment = fitmentLabel(part);
 ---
 <article class="case"
   data-state={part.state}
-  data-search={`${part.title} ${part.oemNumber ?? ""} ${part.supersededTo ?? ""} ${part.yearRange} ${part.category} toyota celica supra`.toLowerCase()}
+  data-search={`${part.title} ${part.oemNumber ?? ""} ${part.supersededTo ?? ""} ${part.yearRange} ${part.category} ${part.vehicleLabel ?? ""}`.toLowerCase()}
 >
   <div class="cat-band" style={`background:${statePaint}`}></div>
   {hasImage ? (
@@ -52,7 +53,9 @@ const oemLabel = oemIdentityLabel(part);
     <span>{oemLabel}</span>
   </div>
   <h3><a href={`/registry/${part.slug}/`}>{part.title}</a></h3>
-  <div class="meta">{part.yearRange} Toyota Celica Supra{part.colors.length > 1 ? ` · originally ${part.colors.length} colors` : ""}</div>
+  <div class:list={["meta", { "fitment-warning": part.fitmentStatus !== "confirmed" }]}>
+    {vehicleFitment}{part.colors.length > 1 ? ` · originally ${part.colors.length} colors` : ""}
+  </div>
   <div class="foot">
     <Stamp state={part.state} label={part.stateLabel} />
     <a class="act" href={`/registry/${part.slug}/`}>{cta[part.state]}</a>
@@ -105,6 +108,7 @@ const oemLabel = oemIdentityLabel(part);
   h3 a { text-decoration: none; }
   h3 a:hover { color: var(--action); }
   .meta { font-family: var(--font-mono); font-size: var(--text-xs); color: var(--panel-dim); padding: 4px 16px 12px; }
+  .fitment-warning { color: var(--status-development); font-weight: 700; }
   .foot {
     margin-top: auto; padding: var(--space-3) 16px 16px;
     display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap;

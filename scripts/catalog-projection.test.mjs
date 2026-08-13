@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { projectOem } from "./catalog-projection.mjs";
+import { projectFitment, projectOem } from "./catalog-projection.mjs";
 
 const entry = (status) => ({
   oem: {
@@ -46,6 +46,44 @@ test("missing or invalid identity fails closed", () => {
       oemNumber: null,
       colors: [],
       supersededTo: null,
+    });
+  }
+});
+
+const fitEntry = (status) => ({
+  fits: [{
+    make: "Toyota",
+    model: "Celica Supra",
+    generation: "A60",
+    year_range: [1982, 1985],
+    status,
+  }],
+});
+
+test("confirmed fitment projects a public vehicle claim", () => {
+  assert.deepEqual(projectFitment(fitEntry("confirmed")), {
+    fitmentStatus: "confirmed",
+    yearRange: [1982, 1985],
+    vehicleLabel: "Toyota Celica Supra",
+  });
+});
+
+for (const status of ["candidate", "disputed", "unknown"]) {
+  test(`${status} fitment quarantines year and vehicle claims`, () => {
+    assert.deepEqual(projectFitment(fitEntry(status)), {
+      fitmentStatus: status,
+      yearRange: null,
+      vehicleLabel: null,
+    });
+  });
+}
+
+test("missing or invalid fitment fails closed", () => {
+  for (const value of [{}, fitEntry("probably")]) {
+    assert.deepEqual(projectFitment(value), {
+      fitmentStatus: "unknown",
+      yearRange: null,
+      vehicleLabel: null,
     });
   }
 });
