@@ -8,6 +8,11 @@
  *   2. A generic JSON webhook when REQUESTS_WEBHOOK_URL is set.
  *   3. Otherwise `unconfigured`.
  *
+ * Two messages go out per submission: the internal alert (above) and a
+ * confirmation to the person who filed the case. The alert carries reply_to =
+ * requester, so answering it in the Proton mailbox reaches the customer rather
+ * than the AgentMail API inbox.
+ *
  * Clients sending `Accept: application/json` (the page's fetch) get JSON.
  * Plain no-JS form posts get a 303: to /request/received/ on success, or to a
  * prefilled mailto: when delivery isn't configured yet.
@@ -34,7 +39,7 @@ function text(...lines: (string | [string, string | undefined])[]): string {
     .join("\n");
 }
 
-async function deliver(subject: string, body: string, clientId: string): Promise<"agentmail" | "webhook" | "unconfigured"> {
+async function deliver(subject: string, body: string, clientId: string, replyTo?: string): Promise<"agentmail" | "webhook" | "unconfigured"> {
   const apiKey = import.meta.env.AGENTMAIL_API_KEY?.trim();
   const inboxId = import.meta.env.AGENTMAIL_INBOX_ID?.trim();
   const to = import.meta.env.REQUESTS_NOTIFY_EMAIL?.trim();
@@ -49,6 +54,7 @@ async function deliver(subject: string, body: string, clientId: string): Promise
           subject,
           text: body,
           client_id: clientId,
+          reply_to: replyTo ? [replyTo] : undefined,
           send_at: new Date(Date.now() + 1000).toISOString(),
         }),
       },
@@ -67,6 +73,43 @@ async function deliver(subject: string, body: string, clientId: string): Promise
     return "webhook";
   }
   return "unconfigured";
+}
+
+/**
+ * Acknowledge the submission to the person who filed it (best-effort — the
+ * internal alert is what must not be lost, so a failed confirmation never
+ * surfaces as a failed submission). AgentMail only: there is no sensible
+ * webhook equivalent of a customer email.
+ *
+ * client_id is suffixed rather than reusing the case number — that is the
+ * alert's idempotency key, and colliding with it would drop this message.
+ * reply_to is the Proton mailbox so a customer reply lands with a human,
+ * not in the API inbox this was sent from.
+ */
+async function acknowledge(to: string, subject: string, body: string, clientId: string): Promise<boolean> {
+  const apiKey = import.meta.env.AGENTMAIL_API_KEY?.trim();
+  const inboxId = import.meta.env.AGENTMAIL_INBOX_ID?.trim();
+  if (!apiKey || !inboxId) return false;
+  try {
+    const res = await fetch(
+      `https://api.agentmail.to/v0/inboxes/${encodeURIComponent(inboxId)}/drafts`,
+      {
+        method: "POST",
+        headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
+        body: JSON.stringify({
+          to,
+          subject,
+          text: body,
+          client_id: `${clientId}-ack`,
+          reply_to: [MAILTO],
+          send_at: new Date(Date.now() + 1000).toISOString(),
+        }),
+      },
+    );
+    return res.ok;
+  } catch {
+    return false;
+  }
 }
 
 /**
@@ -126,11 +169,19 @@ export const POST: APIRoute = async ({ request }) => {
     const body = text("A new member claimed a number.", "", ["Email:", email], ["Case:", caseId], "",
       "They get The Missing Knob when a part moves forward.");
     if (!bot) {
-      const via = await deliver(subject, body, caseId);
+      const via = await deliver(subject, body, caseId, email);
       if (via === "unconfigured") {
         return respond(request, { ok: false, unconfigured: true }, 503, mailtoFallback("Membership — The Lost Clip Society", `Sign me up: ${email}`));
       }
       await record({ type: "membership", email, case_id: caseId });
+      await acknowledge(email, `You’re in the book — ${caseId}`, text(
+        "You’re in the book.", "",
+        ["Member №:", caseId], "",
+        "The Missing Knob ships when a part moves forward — never for noise.",
+        "Reply to this email any time; it reaches the workshop.", "",
+        "— The Lost Clip Society",
+        "  lostclipsociety.com",
+      ), caseId);
     }
     return respond(request, { ok: true, case: caseId }, 200, `/request/received/?case=${caseId}&type=membership`);
   }
@@ -182,7 +233,7 @@ export const POST: APIRoute = async ({ request }) => {
   );
   const partSlug = String(form.get("part_slug") ?? "").trim();
   if (!bot) {
-    const via = await deliver(subject, body, caseId);
+    const via = await deliver(subject, body, caseId, email);
     if (via === "unconfigured") {
       return respond(request, { ok: false, unconfigured: true }, 503,
         mailtoFallback(subject, `${body}\n\n(sent via email — the online desk isn't plugged in yet)`));
@@ -192,6 +243,18 @@ export const POST: APIRoute = async ({ request }) => {
       part_text: part, oem: oem || null, situation: situationLabel || null,
       part_slug: /^[a-z0-9-]+$/.test(partSlug) ? partSlug : null,
     });
+    await acknowledge(email, `Case ${caseId} — received`, text(
+      "Your case file is open.", "",
+      ["Case:", caseId],
+      ["Vehicle:", vehicle],
+      ["Part:", part], "",
+      "The paper trail starts today. We’ll write from the workshop within a few",
+      "days — reply to this email and it goes straight to your case file.",
+      "Photos of the original are welcome, broken or not.", "",
+      "Nothing after a week? Reply here and reference your case number.", "",
+      "— The Lost Clip Society",
+      "  lostclipsociety.com",
+    ), caseId);
   }
   return respond(request, { ok: true, case: caseId }, 200, `/request/received/?case=${caseId}&type=request`);
 };
