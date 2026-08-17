@@ -109,7 +109,36 @@ async function deliver(subject: string, body: string, clientId: string, replyTo?
         }),
       },
     );
-    if (!res.ok) throw new Error(`AgentMail ${res.status}: ${(await res.text()).slice(0, 300)}`);
+    if (!res.ok) {
+      // A reused client_id 404s once its draft is gone (sent, or aged out). The deterministic
+      // case number makes that reachable in normal use: an identical resubmission derives the
+      // same id, and the throw below would hand a real customer a 500. Retry ONCE under a fresh
+      // id — the founder getting a duplicate alert is a far better failure than a lost intake.
+      // A second failure is a genuine configuration problem (wrong inbox, bad key) and must stay
+      // loud: silently swallowing it would recreate the "provider acceptance is not receipt"
+      // trap this endpoint was already burned by.
+      const body404 = (await res.text()).slice(0, 300);
+      if (res.status === 404 || res.status === 409) {
+        const retry = await fetch(
+          `https://api.agentmail.to/v0/inboxes/${encodeURIComponent(inboxId)}/drafts`,
+          {
+            method: "POST",
+            headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
+            body: JSON.stringify({
+              to,
+              subject,
+              text: body,
+              client_id: `${clientId}-r${Date.now().toString(36)}`,
+              reply_to: replyTo ? [replyTo] : undefined,
+              send_at: new Date(Date.now() + 1000).toISOString(),
+            }),
+          },
+        );
+        if (retry.ok) return "agentmail";
+        throw new Error(`AgentMail ${res.status} then retry ${retry.status}: ${body404}`);
+      }
+      throw new Error(`AgentMail ${res.status}: ${body404}`);
+    }
     return "agentmail";
   }
   const webhook = import.meta.env.REQUESTS_WEBHOOK_URL?.trim();
