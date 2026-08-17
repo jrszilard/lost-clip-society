@@ -3,3 +3,6 @@ dist/
 .astro/
 .vercel
 .env*
+
+# Local MCP config (points at the Supabase project; repo is public, Wilma does not need it)
+.mcp.json
