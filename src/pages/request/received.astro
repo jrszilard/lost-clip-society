@@ -26,9 +26,11 @@ import Base from "../../layouts/Base.astro";
   const caseId = q.get("case");
   if (caseId) document.getElementById("case-id").textContent = caseId;
   if (q.get("type") === "membership") {
-    document.getElementById("what").textContent =
-      "You’re in the book. The Missing Knob ships when a part moves forward — never for noise.";
-    document.querySelector(".done-stamp").textContent = "Member number claimed";
+    const again = q.get("again") === "1";
+    document.getElementById("what").textContent = again
+      ? "You were already in the book — same number, no second entry. The Missing Knob ships when a part moves forward, never for noise."
+      : "You’re in the book. The Missing Knob ships when a part moves forward — never for noise.";
+    document.querySelector(".done-stamp").textContent = again ? "Already a member" : "Member number claimed";
   }
 </script>
 

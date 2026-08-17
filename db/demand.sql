@@ -21,10 +21,25 @@ create table if not exists public.demand_signals (
   situation   text
 );
 
--- One vote per part per email. Requests and memberships may repeat (each is a case).
+-- One vote per part per email. Requests may repeat (each is a genuinely separate case).
 create unique index if not exists demand_signals_vote_dedup
   on public.demand_signals (part_slug, lower(email))
   where type = 'vote';
+
+-- One membership per email. A membership is a PERSON, not a case: re-submitting the join form
+-- used to write a second row and send a second welcome, and would have duplicated every future
+-- bulletin. The member number is deterministic (sha256 of ["member", email]), so a repeat claim
+-- resolves to the same LCS-XXXXX and the API can answer "you are already in the book".
+create unique index if not exists demand_signals_membership_dedup
+  on public.demand_signals (lower(email))
+  where type = 'membership';
+
+-- Mailing-list state. The join form promises The Missing Knob, which is marketing mail: it needs
+-- a one-click exit and a record of who took it. NULL = subscribed. Unsubscribing is deliberately
+-- a stamp on the membership row rather than a delete, so a re-join cannot silently resurrect
+-- someone who opted out and so the count of who left stays honest.
+alter table public.demand_signals
+  add column if not exists unsubscribed_at timestamptz;
 
 create index if not exists demand_signals_part on public.demand_signals (part_slug);
 

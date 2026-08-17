@@ -94,9 +94,10 @@ const featured = parts.slice(0, 3);
         <div class="eyebrow">Membership · free</div>
         <h2>Join the Society.</h2>
         <p>
-          Free, forever, and numbered. Members vote on which part we tackle next, get notified
-          when their part reaches production, and share fit reports that make every listing more
-          trustworthy. The parts cost money. Membership never does.
+          Free, forever, and numbered — the number is yours the moment you claim it. What it buys
+          you today, stated plainly: <b>The Missing Knob</b>, our bulletin, which ships only when a
+          part actually moves forward. Never on a schedule. Voting on the registry is open to
+          everyone, member or not. The parts cost money. Membership never does.
         </p>
         <form class="join-row" id="join-form" method="post" action="/api/request">
           <input type="hidden" name="type" value="membership" />
@@ -104,8 +105,12 @@ const featured = parts.slice(0, 3);
           <input type="email" name="email" required placeholder="you@garage.example" aria-label="Email address" />
           <button class="btn primary" type="submit">Claim a member number</button>
         </form>
-        <p class="join-done" id="join-done" hidden>You’re in the book. The bulletin ships when a part moves — never for noise.</p>
-        <small>Members get <b>The Missing Knob</b>, our bulletin. It ships only when a part moves forward.</small>
+        <p class="join-done" id="join-done" hidden>You’re in the book. The Missing Knob ships when a part moves — never for noise.</p>
+        <small>
+          We keep your address to send The Missing Knob, and for nothing else — never sold, never
+          shared. Every issue carries a one-click way out, and you can
+          <a href="/unsubscribe/">leave at any time</a>.
+        </small>
       </div>
       <div class="m-card" role="img" aria-label="Sample membership card">
         <div class="mc-top">

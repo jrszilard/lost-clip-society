@@ -1,0 +1,105 @@
+---
+import Base from "../layouts/Base.astro";
+import { unsubTokenValid } from "./api/request";
+
+export const prerender = false;
+
+// GET shows a confirm button; only POST actually unsubscribes. Mail clients and security
+// scanners prefetch links in email, and a GET that acted immediately would opt people out
+// who never clicked. RFC 8058 one-click senders POST for the same reason.
+const url = new URL(Astro.request.url);
+const email = (url.searchParams.get("e") ?? "").trim().toLowerCase();
+const token = (url.searchParams.get("t") ?? "").trim();
+const ok = Boolean(email) && (await unsubTokenValid(email, token));
+
+let state: "invalid" | "confirm" | "done" | "error" = ok ? "confirm" : "invalid";
+
+if (ok && Astro.request.method === "POST") {
+  const sbUrl = import.meta.env.SUPABASE_URL?.trim();
+  const sbKey = import.meta.env.SUPABASE_SERVICE_ROLE_KEY?.trim();
+  state = "error";
+  if (sbUrl && sbKey) {
+    try {
+      const res = await fetch(
+        `${sbUrl}/rest/v1/demand_signals?type=eq.membership&email=ilike.${encodeURIComponent(email)}`,
+        {
+          method: "PATCH",
+          headers: {
+            apikey: sbKey, Authorization: `Bearer ${sbKey}`,
+            "Content-Type": "application/json", Prefer: "return=minimal",
+          },
+          body: JSON.stringify({ unsubscribed_at: new Date().toISOString() }),
+        },
+      );
+      // A stamp, not a delete: the row stays so a later re-join cannot silently resurrect
+      // someone who opted out, and so "who left" remains answerable.
+      if (res.ok) state = "done";
+    } catch { state = "error"; }
+  }
+}
+---
+<Base title="Leave the Society — The Lost Clip Society">
+  <section>
+    <div class="wrap narrow">
+      <div class="panel">
+        {state === "confirm" && (
+          <>
+            <div class="stamp">Confirm</div>
+            <p class="who">{email}</p>
+            <p>Leaving stops <b>The Missing Knob</b>. Your member number stays yours, and you can
+              claim it again any time — nothing is deleted.</p>
+            <form method="post">
+              <button class="btn primary" type="submit">Leave the Society</button>
+            </form>
+          </>
+        )}
+        {state === "done" && (
+          <>
+            <div class="stamp">Removed</div>
+            <p class="who">{email}</p>
+            <p>You're off the list. No bulletin, no follow-up. If a part you cared about moves
+              forward, you'll have to come back and look — we won't write.</p>
+            <p><a class="btn ghost" href="/registry/">Back to the catalog</a></p>
+          </>
+        )}
+        {state === "invalid" && (
+          <>
+            <div class="stamp">Not recognised</div>
+            <p>That link isn't valid — it may have been altered in transit, or truncated by a mail
+              client. Use the link at the bottom of any issue of The Missing Knob, or email
+              <a href="mailto:requests@lostclipsociety.com">requests@lostclipsociety.com</a> and
+              we'll take you off by hand.</p>
+          </>
+        )}
+        {state === "error" && (
+          <>
+            <div class="stamp">Desk jammed</div>
+            <p>We couldn't record that just now. Nothing changed. Try once more, or email
+              <a href="mailto:requests@lostclipsociety.com">requests@lostclipsociety.com</a> and a
+              human will do it.</p>
+            <form method="post"><button class="btn primary" type="submit">Try again</button></form>
+          </>
+        )}
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .narrow { max-width: 640px; }
+  .panel {
+    background: var(--panel); color: var(--panel-fg);
+    border: var(--border-hairline) solid var(--panel-line);
+    box-shadow: var(--shadow-card); padding: var(--space-5);
+  }
+  .stamp {
+    display: inline-block; font-family: var(--font-mono); font-size: var(--text-sm);
+    font-weight: 700; letter-spacing: var(--tracking-label); text-transform: uppercase;
+    color: var(--status-measured); border: var(--border-stamp) solid var(--status-measured);
+    border-radius: var(--radius-stamp); padding: 6px 10px; transform: rotate(-2deg);
+    margin-bottom: var(--space-3);
+  }
+  .who { font-family: var(--font-mono); font-size: 0.95rem; color: var(--panel-fg); }
+  .panel p { color: var(--panel-dim); }
+  .panel form { margin-top: var(--space-4); }
+</style>

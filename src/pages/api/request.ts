@@ -22,6 +22,56 @@ import type { APIRoute } from "astro";
 export const prerender = false;
 
 const MAILTO = "requests@lostclipsociety.com";
+// Absolute, not derived from the request: @astrojs/vercel reports url.origin as localhost
+// (the Host header never reaches the renderer — the same trap that forced checkOrigin off),
+// so a link built from the request would point at localhost in production.
+const SITE = "https://lostclipsociety.com";
+
+/**
+ * Unsubscribe token: HMAC(secret, lower(email)). The member number cannot serve as the token —
+ * it is derived by code in a PUBLIC repo, so anyone could compute it for any address.
+ * Returns null when UNSUBSCRIBE_SECRET is unset, and every caller then omits the link rather
+ * than shipping a broken one.
+ */
+async function unsubToken(email: string): Promise<string | null> {
+  const secret = import.meta.env.UNSUBSCRIBE_SECRET?.trim();
+  if (!secret) return null;
+  const key = await crypto.subtle.importKey(
+    "raw", new TextEncoder().encode(secret), { name: "HMAC", hash: "SHA-256" }, false, ["sign"],
+  );
+  const sig = await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(email.trim().toLowerCase()));
+  return [...new Uint8Array(sig)].map((b) => b.toString(16).padStart(2, "0")).join("").slice(0, 32);
+}
+
+export async function unsubLink(email: string): Promise<string | null> {
+  const t = await unsubToken(email);
+  return t && `${SITE}/unsubscribe/?e=${encodeURIComponent(email.trim().toLowerCase())}&t=${t}`;
+}
+
+export async function unsubTokenValid(email: string, token: string): Promise<boolean> {
+  const t = await unsubToken(email);
+  if (!t || !token || t.length !== token.length) return false;
+  let diff = 0;                              // constant-time compare
+  for (let i = 0; i < t.length; i++) diff |= t.charCodeAt(i) ^ token.charCodeAt(i);
+  return diff === 0;
+}
+
+/** Clear an opt-out. An explicit re-join IS consent, and the dedup index means the row already exists. */
+async function resubscribe(email: string): Promise<void> {
+  const sbUrl = import.meta.env.SUPABASE_URL?.trim();
+  const sbKey = import.meta.env.SUPABASE_SERVICE_ROLE_KEY?.trim();
+  if (!sbUrl || !sbKey) return;
+  try {
+    await fetch(`${sbUrl}/rest/v1/demand_signals?type=eq.membership&email=ilike.${encodeURIComponent(email.trim())}`, {
+      method: "PATCH",
+      headers: {
+        apikey: sbKey, Authorization: `Bearer ${sbKey}`,
+        "Content-Type": "application/json", Prefer: "return=minimal",
+      },
+      body: JSON.stringify({ unsubscribed_at: null }),
+    });
+  } catch { /* best-effort: never fail a join over it */ }
+}
 
 async function caseNumber(parts: string[]): Promise<string> {
   const buf = await crypto.subtle.digest(
@@ -169,16 +219,28 @@ export const POST: APIRoute = async ({ request }) => {
     const body = text("A new member claimed a number.", "", ["Email:", email], ["Case:", caseId], "",
       "They get The Missing Knob when a part moves forward.");
     if (!bot) {
+      // Membership records BEFORE emailing — the reverse of the request path. A membership is a
+      // PERSON, not a case: the unique index makes a repeat claim a 409, and answering that
+      // silently is the whole point (no second welcome, no duplicated bulletin). The
+      // never-lose-a-signup property still holds, because only a definite `duplicate` short-
+      // circuits; an unconfigured or broken DB falls through and still sends.
+      const stored = await record({ type: "membership", email, case_id: caseId });
+      if (stored === "duplicate") {
+        await resubscribe(email);            // a re-join after opting out is fresh consent
+        return respond(request, { ok: true, case: caseId, duplicate: true }, 200,
+          `/request/received/?case=${caseId}&type=membership&again=1`);
+      }
       const via = await deliver(subject, body, caseId, email);
       if (via === "unconfigured") {
         return respond(request, { ok: false, unconfigured: true }, 503, mailtoFallback("Membership — The Lost Clip Society", `Sign me up: ${email}`));
       }
-      await record({ type: "membership", email, case_id: caseId });
+      const leave = await unsubLink(email);
       await acknowledge(email, `You’re in the book — ${caseId}`, text(
         "You’re in the book.", "",
         ["Member №:", caseId], "",
         "The Missing Knob ships when a part moves forward — never for noise.",
         "Reply to this email any time; it reaches the workshop.", "",
+        ...(leave ? [`Leaving is one click, any time:\n${leave}`, ""] : []),
         "— The Lost Clip Society",
         "  lostclipsociety.com",
       ), caseId);
