@@ -7,7 +7,7 @@ import { ClipboardList, Search, Ruler, Printer, CarFront } from "@lucide/astro";
 const parts = allParts();
 const featured = parts.slice(0, 3);
 ---
-<Base title="The Lost Clip Society: We remake the car parts nobody sells anymore">
+<Base title="The Ministry of Discontinued Parts: We remake the car parts nobody sells anymore">
   <div class="wrap hero">
     <div>
       <h1>We remake the car parts <span class="mk">nobody sells anymore.</span></h1>
@@ -91,35 +91,35 @@ const featured = parts.slice(0, 3);
   <section id="society">
     <div class="wrap society">
       <div class="join">
-        <div class="eyebrow">Membership · free</div>
-        <h2>Join the Society.</h2>
+        <div class="eyebrow">The Register · free</div>
+        <h2>Register with the Ministry.</h2>
         <p>
-          Free, forever, and numbered — the number is yours the moment you claim it. What it buys
-          you today, stated plainly: <b>The Missing Knob</b>, our bulletin, which ships only when a
-          part actually moves forward. Never on a schedule. Voting on the registry is open to
-          everyone, member or not. The parts cost money. Membership never does.
+          Free, forever, and numbered — your registrant number is yours the moment you claim it.
+          What it buys you, stated plainly: <b>The Ministry Gazette</b>, our bulletin, which ships
+          only when a part actually moves forward. Never on a schedule. Voting on the registry is
+          open to everyone, registered or not. The parts cost money. Registration never does.
         </p>
         <form class="join-row" id="join-form" method="post" action="/api/request">
           <input type="hidden" name="type" value="membership" />
           <input type="text" name="company" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true" />
           <input type="email" name="email" required placeholder="you@garage.example" aria-label="Email address" />
-          <button class="btn primary" type="submit">Claim a member number</button>
+          <button class="btn primary" type="submit">Claim a registrant number</button>
         </form>
-        <p class="join-done" id="join-done" hidden>You’re in the book. The Missing Knob ships when a part moves — never for noise.</p>
+        <p class="join-done" id="join-done" hidden>You’re on the register. The Gazette ships when a part moves — never for noise.</p>
         <small>
-          We keep your address to send The Missing Knob, and for nothing else — never sold, never
+          We keep your address to send the Gazette, and for nothing else — never sold, never
           shared. Every issue carries a one-click way out, and you can
           <a href="/unsubscribe/">leave at any time</a>.
         </small>
       </div>
-      <div class="m-card" role="img" aria-label="Sample membership card">
+      <div class="m-card" role="img" aria-label="Sample registration card">
         <div class="mc-top">
-          <span class="mc-title">THE LOST CLIP SOCIETY</span>
-          <span class="mc-no">MEMBER № 0001</span>
+          <span class="mc-title">MINISTRY OF DISCONTINUED PARTS</span>
+          <span class="mc-no">REGISTRANT № 0001</span>
         </div>
         <dl>
           <dt>Chapter</dt><dd>A60 · Celica Supra</dd>
-          <dt>Standing</dt><dd>Fitment Officer</dd>
+          <dt>Standing</dt><dd>Fitment Officer, Provisional</dd>
           <dt>Testimony</dt><dd>1 part measured (18 dims)</dd>
           <dt>Since</dt><dd>2026</dd>
         </dl>
@@ -243,7 +243,7 @@ const featured = parts.slice(0, 3);
 
   .m-card { background: linear-gradient(135deg, #efe7d3, #e4d9bd); color: #26221a; border: 1px solid #cfc2a0; padding: 22px 24px; max-width: 420px; box-shadow: var(--shadow-card); transform: rotate(-1.2deg); }
   .mc-top { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--brand-oxblood); padding-bottom: 10px; margin-bottom: 14px; }
-  .mc-title { font-family: var(--font-display); font-size: 0.95rem; }
+  .mc-title { font-family: var(--font-display); font-size: 0.78rem; letter-spacing: 0.04em; }
   .mc-no { font-family: var(--font-mono); font-size: 0.8rem; color: var(--brand-oxblood); font-weight: 700; }
   .m-card dl { display: grid; grid-template-columns: auto 1fr; gap: 4px 16px; margin: 0; font-size: 0.8rem; }
   .m-card dt { font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: var(--tracking-label); text-transform: uppercase; color: #8a8067; align-self: center; }

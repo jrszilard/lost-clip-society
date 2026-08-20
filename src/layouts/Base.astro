@@ -2,7 +2,7 @@
 import "../styles/global.css";
 import Crest from "../components/Crest.astro";
 interface Props { title: string; description?: string }
-const { title, description = "Reproduction parts for classic cars — measured from originals, made to order, fitted on real cars." } = Astro.props;
+const { title, description = "The Ministry of Discontinued Parts: reproduction parts for classic cars — measured from originals, made to order, fitted on real cars." } = Astro.props;
 ---
 <!doctype html>
 <html lang="en">
@@ -18,7 +18,7 @@ const { title, description = "Reproduction parts for classic cars — measured f
       <div class="wrap bar">
         <a class="markrow" href="/">
           <span class="mini-crest"><Crest size={34} /></span>
-          <span class="wordmark">THE <b>LOST CLIP</b> SOCIETY</span>
+          <span class="wordmark">MINISTRY OF <b>DISCONTINUED PARTS</b></span>
         </a>
         <nav class="main" aria-label="Primary">
           <a href="/registry/">Parts Catalog</a>
@@ -35,10 +35,9 @@ const { title, description = "Reproduction parts for classic cars — measured f
     <footer class="site">
       <div class="wrap cols">
         <div>
-          <div class="wordmark" style="margin-bottom:8px">THE <b>LOST CLIP</b> SOCIETY</div>
+          <div class="wordmark" style="margin-bottom:8px">MINISTRY OF <b>DISCONTINUED PARTS</b></div>
           <p class="fine charter">
-            Operating under charter from the Ministry of Discontinued Parts —
-            self-appointed, est. 2026.
+            Ministry charter, Article IV: we collect measurements, not data.
           </p>
           <p class="fine">
             Reproduction interior trim for cars the industry gave up on. Pre-2000, unbranded,
@@ -57,9 +56,9 @@ const { title, description = "Reproduction parts for classic cars — measured f
       </div>
       <div class="wrap">
         <p class="fine small">
-          © 2026 The Lost Clip Society. The Society accepts no responsibility for tears shed
+          © 2026 The Ministry of Discontinued Parts. The Ministry accepts no responsibility for tears shed
           over crumbled OEM plastic. OEM part numbers appear for identification only; the
-          Society is not affiliated with, endorsed by, or laughed at by any manufacturer. Anymore.
+          Ministry is not affiliated with, endorsed by, or laughed at by any manufacturer. Anymore.
         </p>
       </div>
     </footer>

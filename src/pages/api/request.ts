@@ -244,9 +244,9 @@ export const POST: APIRoute = async ({ request }) => {
 
   if (type === "membership") {
     const caseId = await caseNumber(["member", email]);
-    const subject = `New Society member — ${email}`;
+    const subject = `New Ministry registrant — ${email}`;
     const body = text("A new member claimed a number.", "", ["Email:", email], ["Case:", caseId], "",
-      "They get The Missing Knob when a part moves forward.");
+      "They get the Ministry Gazette when a part moves forward.");
     if (!bot) {
       // Membership records BEFORE emailing — the reverse of the request path. A membership is a
       // PERSON, not a case: the unique index makes a repeat claim a 409, and answering that
@@ -261,16 +261,16 @@ export const POST: APIRoute = async ({ request }) => {
       }
       const via = await deliver(subject, body, caseId, email);
       if (via === "unconfigured") {
-        return respond(request, { ok: false, unconfigured: true }, 503, mailtoFallback("Membership — The Lost Clip Society", `Sign me up: ${email}`));
+        return respond(request, { ok: false, unconfigured: true }, 503, mailtoFallback("Registration — Ministry of Discontinued Parts", `Sign me up: ${email}`));
       }
       const leave = await unsubLink(email);
       await acknowledge(email, `You’re in the book — ${caseId}`, text(
         "You’re in the book.", "",
         ["Member №:", caseId], "",
-        "The Missing Knob ships when a part moves forward — never for noise.",
+        "The Ministry Gazette ships when a part moves forward — never for noise.",
         "Reply to this email any time; it reaches the workshop.", "",
         ...(leave ? [`Leaving is one click, any time:\n${leave}`, ""] : []),
-        "— The Lost Clip Society",
+        "— The Ministry of Discontinued Parts",
         "  lostclipsociety.com",
       ), caseId);
     }
@@ -343,7 +343,7 @@ export const POST: APIRoute = async ({ request }) => {
       "days — reply to this email and it goes straight to your case file.",
       "Photos of the original are welcome, broken or not.", "",
       "Nothing after a week? Reply here and reference your case number.", "",
-      "— The Lost Clip Society",
+      "— The Ministry of Discontinued Parts",
       "  lostclipsociety.com",
     ), caseId);
   }

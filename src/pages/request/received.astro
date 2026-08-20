@@ -1,7 +1,7 @@
 ---
 import Base from "../../layouts/Base.astro";
 ---
-<Base title="Case Received — The Lost Clip Society">
+<Base title="Case Received — The Ministry of Discontinued Parts">
   <section>
     <div class="wrap narrow">
       <div class="done">
@@ -28,8 +28,8 @@ import Base from "../../layouts/Base.astro";
   if (q.get("type") === "membership") {
     const again = q.get("again") === "1";
     document.getElementById("what").textContent = again
-      ? "You were already in the book — same number, no second entry. The Missing Knob ships when a part moves forward, never for noise."
-      : "You’re in the book. The Missing Knob ships when a part moves forward — never for noise.";
+      ? "You were already on the register — same number, no second entry. The Ministry Gazette ships when a part moves forward, never for noise."
+      : "You’re on the register. The Ministry Gazette ships when a part moves forward — never for noise.";
     document.querySelector(".done-stamp").textContent = again ? "Already a member" : "Member number claimed";
   }
 </script>
