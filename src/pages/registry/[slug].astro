@@ -135,6 +135,11 @@ const hasImage = fs.existsSync(path.join(process.cwd(), "public", "images", "par
           ))}
         </div>
       )}
+
+      <p class="ministry-line">
+        Filed with the Ministry of Discontinued Parts ·
+        {part.oemNumber ? `Case № ${part.oemNumber}` : "Case pending identification"}
+      </p>
     </div>
   </section>
 </Base>
@@ -236,4 +241,9 @@ const hasImage = fs.existsSync(path.join(process.cwd(), "public", "images", "par
   .testimony { margin-top: var(--space-5); }
   .testimony h2 { font-size: var(--text-lg); margin-bottom: var(--space-3); }
   .report { font-family: var(--font-mono); font-size: 0.78rem; color: var(--fg-dim); border-left: 3px solid var(--status-measured); padding: 10px 14px; margin-bottom: var(--space-2); }
+  .ministry-line {
+    margin-top: var(--space-5); font-family: var(--font-mono); font-size: 0.64rem;
+    letter-spacing: 0.14em; text-transform: uppercase; color: var(--fg-dim);
+    border-top: var(--border-hairline) solid var(--edge); padding-top: var(--space-3);
+  }
 </style>

@@ -11,6 +11,8 @@ import Base from "../layouts/Base.astro";
         if you don’t. We’ll trace its OEM paper trail and add it to the catalog. Then, depending
         on what exists in the world, we’ll tell you exactly what it takes to make yours.
       </p>
+      <p class="dp1-line">Filed as <b>Form DP-1</b> — Application for the Reinstatement of a
+        Discontinued Part. The Ministry reviews every application. Slowly, but genuinely.</p>
       <div class="tiers">
         <div class="tier"><b>You have the old part (even broken)?</b> Best case — we measure it
           and reproduce it. Mail-in or guided self-measurement.</div>
@@ -25,7 +27,7 @@ import Base from "../layouts/Base.astro";
       <form id="case-form" class="case-file" method="post" action="/api/request">
         <div class="cf-head">
           <span class="cf-title">New case file</span>
-          <span class="cf-no">INTAKE FORM LCS-1</span>
+          <span class="cf-no">MINISTRY FORM DP-1</span>
         </div>
         <input type="hidden" name="type" value="request" />
         <input type="hidden" name="part_slug" value="" />
@@ -151,6 +153,11 @@ import Base from "../layouts/Base.astro";
   .narrow { max-width: 720px; }
   h1 { font-size: 2rem; margin: 8px 0 var(--space-4); }
   p { color: var(--fg-dim); }
+  .dp1-line {
+    font-family: var(--font-mono); font-size: var(--text-xs); color: var(--fg-dim);
+    letter-spacing: 0.04em; max-width: 60ch; margin-top: var(--space-2);
+  }
+  .dp1-line b { color: var(--accent); }
   .tiers { display: grid; gap: var(--space-3); margin: var(--space-4) 0 var(--space-5); }
   .tier {
     background: var(--bg-2); border: var(--border-hairline) solid var(--edge);

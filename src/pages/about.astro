@@ -1,0 +1,105 @@
+---
+import Base from "../layouts/Base.astro";
+---
+<Base title="About — The Lost Clip Society"
+      description="Who we are, why the Society is named after a clip, and why keeping pre-digital cars on the road matters more every year.">
+  <section>
+    <div class="wrap narrow">
+      <div class="eyebrow">The Society · self-appointed, est. 2026</div>
+      <h1>We remake what the industry abandoned.</h1>
+      <p>
+        The Lost Clip Society makes reproduction parts for cars the industry gave up on —
+        measured from surviving originals with calipers, modeled in-house, printed to order,
+        and fitted on real cars before any badge says so. When the world moves on and leaves a
+        car behind — a blade standard, a bulb fitting, a connector — we engineer the adaptor
+        the manufacturer never made. Every dimension we take is published free. The parts cost
+        money. The measurements never do.
+      </p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap narrow">
+      <div class="sec-head"><h2>Why “Clip”?</h2><div class="rule"></div></div>
+      <p>
+        Case No. 1 was a sun visor clip for a 1983 Toyota Celica Supra. The dealer laughed.
+        We measured. Everything since is the same case with different part numbers — vents,
+        knobs, bezels, wiper adaptors, whatever your car lost. The clip sits at the center of
+        our crest the way a founder’s portrait hangs in a lobby.
+      </p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap narrow">
+      <div class="sec-head"><h2>The Ministry</h2><div class="rule"></div></div>
+      <p>
+        The Society operates under charter from the <b>Ministry of Discontinued Parts</b> —
+        self-appointed, since the industry never created the ministry it needed. Requests are
+        filed with the Ministry on Form DP-1. Parts that pass their fit tests are stamped.
+        The Minister remains unavailable for comment.
+      </p>
+      <blockquote class="charter">
+        <span class="charter-head">From the Ministry charter, Article IV</span>
+        “The Ministry collects measurements, not data. The distinction is everything.”
+      </blockquote>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap narrow">
+      <div class="sec-head"><h2>The Analog Charter</h2><div class="rule"></div></div>
+      <p>
+        Modern cars log where you go and how you drive, and that data has a market. Features
+        arrive as subscriptions; some carmakers have been caught selling driving records to
+        data brokers and insurers. We take no political position on any of it. We simply note
+        that a 1983 car cannot phone home, because it has no phone.
+      </p>
+      <p>
+        Every car we keep on the road is one of the last machines that reports to nobody. It
+        has no accounts, no updates, and no opinions about where you drove on Tuesday. The
+        Ministry considers this worth preserving — and it takes rather a lot of clips.
+      </p>
+      <p class="receipts">
+        We run the Society the same way: no trackers on the case files, a mailing list that
+        exists only to mail you, and a demand ledger that stores the minimum a part request
+        needs. The Society knows less about you than your car’s manufacturer knows about
+        theirs. We plan to keep it that way.
+      </p>
+      <p class="fine-note">
+        Data collected by your 1983 Supra since 1983: none.
+      </p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap narrow cta-band">
+      <a class="btn primary" href="/registry/">Browse the parts</a>
+      <a class="btn ghost" href="/request/">File a request — Form DP-1</a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  h1 { max-width: 24ch; }
+  section { padding: var(--space-5) 0; }
+  section p { max-width: 68ch; }
+  .charter {
+    margin: var(--space-4) 0 0; padding: var(--space-4) var(--space-5);
+    border-left: 3px solid var(--accent);
+    background: var(--bg-2);
+    font-family: var(--font-display); font-size: 1.05rem; line-height: 1.6;
+    max-width: 56ch;
+  }
+  .charter-head {
+    display: block; font-family: var(--font-mono); font-size: var(--text-xs);
+    letter-spacing: 0.14em; text-transform: uppercase; color: var(--fg-dim);
+    margin-bottom: 8px;
+  }
+  .receipts { border-top: var(--border-hairline) solid var(--edge); padding-top: var(--space-3); }
+  .fine-note {
+    font-family: var(--font-mono); font-size: var(--text-xs);
+    letter-spacing: 0.06em; color: var(--fg-dim); text-transform: uppercase;
+  }
+  .cta-band { display: flex; gap: var(--space-3); flex-wrap: wrap; }
+</style>
