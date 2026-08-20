@@ -147,7 +147,7 @@ const featured = parts.slice(0, 3);
         document.getElementById("join-done").hidden = false;
       } else if (data.unconfigured) {
         const email = (new FormData(joinForm).get("email") as string) ?? "";
-        window.location.href = `mailto:requests@lostclipsociety.com?subject=${encodeURIComponent("Membership — The Lost Clip Society")}&body=${encodeURIComponent("Sign me up: " + email)}`;
+        window.location.href = `mailto:requests@lostclipsociety.com?subject=${encodeURIComponent("Registration — Ministry of Discontinued Parts")}&body=${encodeURIComponent("Sign me up: " + email)}`;
       } else {
         btn.disabled = false;
       }
