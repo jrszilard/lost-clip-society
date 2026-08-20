@@ -1,0 +1,16 @@
+{
+  "redirects": [
+    {
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "ministryofdiscontinuedparts.com" }],
+      "destination": "https://lostclipsociety.com/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "www.ministryofdiscontinuedparts.com" }],
+      "destination": "https://lostclipsociety.com/:path*",
+      "permanent": true
+    }
+  ]
+}
